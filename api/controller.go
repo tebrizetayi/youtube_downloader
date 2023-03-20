@@ -18,6 +18,7 @@ func NewYoutubeController(downloader youtube.YoutubeDownloader) YoutubeControlle
 
 }
 
+// DownloadMp3
 func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) {
 	// Open the file to be downloaded
 
@@ -61,6 +62,7 @@ func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
+// ServeIndex
 func (c *YoutubeController) ServeIndex(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/index.html")
 }

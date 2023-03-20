@@ -2,7 +2,10 @@ module youtube_download
 
 go 1.20
 
-require github.com/kkdai/youtube/v2 v2.7.18
+require (
+	github.com/gorilla/mux v1.8.0
+	github.com/kkdai/youtube/v2 v2.7.18
+)
 
 require (
 	github.com/bitly/go-simplejson v0.5.0 // indirect
