@@ -12,11 +12,11 @@ import (
 
 func main() {
 
-	//port := os.Getenv("SERVER_LISTEN_ADDR")
-	port := ":8080"
+	port := os.Getenv("PORT")
 	if port == "" {
-		port = ":8080"
+		port = "8080"
 	}
+	port = ":" + port
 
 	// Make a channel to listen for an interrupt or terminate signal from the OS.
 	// Use a buffered channel because the signal package requires it.
