@@ -88,8 +88,16 @@ func (c *Client) convertMp4ToMp3(fileName string) ([]byte, error) {
 	// Convert video to MP3
 
 	mp3File := fmt.Sprintf("%s.mp3", fileName)
-	cmd := exec.Command("ffmpeg", "-i", fileName, "-vn", "-acodec", "libmp3lame", "-ac", "2", "-ab", "160k", "-ar", "48000", mp3File)
+	//ffmpeg -i input_video.mp4 -vn -acodec libmp3lame -b:a 128k -ar 44100 -ac 2 -threads 4 -preset ultrafast output_audio.mp3
+
+	cmd := exec.Command("ffmpeg", "-hwaccel", "auto", "-i", fileName, "-vn", "-acodec", "libmp3lame", "-b:a", "96k", "-ar", "44100", "-ac", "2", "-s", "640x360", "-threads", "8", "-preset", "ultrafast", mp3File)
+
+	//cmd := exec.Command("ffmpeg", "-i", fileName, "-vn", "-acodec", "libmp3lame",
+	//	"-b:a", "128k", "-ar", "44100", "-ac", "2", "-threads", "4", "-preset ultrafast", mp3File)
+
+	fmt.Println(cmd.String())
 	err := cmd.Run()
+
 	if err != nil {
 		return nil, err
 	}
