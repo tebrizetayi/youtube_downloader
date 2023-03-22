@@ -12,7 +12,8 @@ import (
 
 func main() {
 
-	port := os.Getenv("SERVER_LISTEN_ADDR")
+	//port := os.Getenv("SERVER_LISTEN_ADDR")
+	port := ":8080"
 	if port == "" {
 		port = ":8080"
 	}
