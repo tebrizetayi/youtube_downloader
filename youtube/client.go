@@ -7,12 +7,13 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/kkdai/youtube/v2"
 )
 
 type YoutubeDownloader interface {
-	DownloadYouTubeMP3(url string) (string, error)
+	DownloadYouTubeMP3(url string) ([]byte, error)
 }
 
 type Client struct {
@@ -34,23 +35,23 @@ func (c *Client) extractVideoID(url string) (string, error) {
 	return matches[1], nil
 }
 
-func (c *Client) DownloadYouTubeMP3(url string) (string, error) {
+func (c *Client) DownloadYouTubeMP3(url string) ([]byte, error) {
 
 	videoID, err := c.extractVideoID(url)
 	if err != nil {
-		return "", nil
+		return nil, err
 	}
 	filename, err := c.download(videoID)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	filename, err = c.convertMp4ToMp3(filename)
+	mp3Bytes, err := c.convertMp4ToMp3(filename)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return filename, nil
+	return mp3Bytes, nil
 }
 
 func (c *Client) download(videoID string) (string, error) {
@@ -67,11 +68,10 @@ func (c *Client) download(videoID string) (string, error) {
 		return "", err
 	}
 
-	fileName := video.Title
-	fileName = strings.ReplaceAll(fileName, " ", "_")
-	fileName = strings.ToLower(fileName)
+	fileName := video.Title + fmt.Sprintf("%d.mp4", time.Now().UnixNano())
+	fileName = strings.ReplaceAll(strings.ToLower(fileName), " ", "_")
 
-	file, err := os.Create(fmt.Sprintf("%s.mp4", fileName))
+	file, err := os.Create(fileName)
 	if err != nil {
 		return "", err
 	}
@@ -84,15 +84,20 @@ func (c *Client) download(videoID string) (string, error) {
 	return fileName, nil
 }
 
-func (c *Client) convertMp4ToMp3(fileName string) (string, error) {
+func (c *Client) convertMp4ToMp3(fileName string) ([]byte, error) {
 	// Convert video to MP3
 
 	mp3File := fmt.Sprintf("%s.mp3", fileName)
-	cmd := exec.Command("ffmpeg", "-i", fmt.Sprintf("%s.mp4", fileName), "-vn", "-acodec", "libmp3lame", "-ac", "2", "-ab", "160k", "-ar", "48000", mp3File)
+	cmd := exec.Command("ffmpeg", "-i", fileName, "-vn", "-acodec", "libmp3lame", "-ac", "2", "-ab", "160k", "-ar", "48000", mp3File)
 	err := cmd.Run()
-	fmt.Println(cmd.String())
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return mp3File, nil
+
+	mp3Bytes, err := os.ReadFile(fmt.Sprintf("%s.mp3", fileName))
+	if err != nil {
+		return nil, err
+	}
+	return mp3Bytes, nil
+
 }

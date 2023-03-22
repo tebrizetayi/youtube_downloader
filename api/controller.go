@@ -2,10 +2,9 @@ package api
 
 import (
 	"fmt"
-	"io"
-	"log"
+
 	"net/http"
-	"os"
+	"time"
 	"youtube_download/youtube"
 )
 
@@ -28,38 +27,20 @@ func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) 
 	}
 	url := r.FormValue("url")
 
-	fileName, err := c.YoutubeDownloader.DownloadYouTubeMP3(url)
-	log.Println(fileName)
+	mp3File, err := c.YoutubeDownloader.DownloadYouTubeMP3(url)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	file, err := os.Open(fileName)
-	if err != nil {
-		http.Error(w, "file not found", http.StatusNotFound)
-		return
-	}
-	defer file.Close()
 
-	fileInfo, err := file.Stat()
-	if err != nil {
-		http.Error(w, "file not found", http.StatusNotFound)
-		return
-	}
-
-	log.Println(file.Name())
-	log.Println(fileInfo)
 	// Set the response header to indicate the file download
-	w.Header().Set("Content-Disposition", "attachment; filename="+file.Name())
+	w.Header().Set("Content-Disposition", "attachment; filename="+fmt.Sprintf("%s.mp3", time.Now().String()))
 	w.Header().Set("Content-Type", "audio/mpeg")
-	w.Header().Set("Content-Length", fmt.Sprintf("%d", fileInfo.Size()))
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(mp3File)))
 
 	// Copy the file to the response writer
-	_, err = io.Copy(w, file)
-	if err != nil {
-		http.Error(w, "Failed to download file", http.StatusInternalServerError)
-		return
-	}
+
+	w.Write(mp3File)
 }
 
 // ServeIndex
