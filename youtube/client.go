@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"regexp"
 	"strings"
 	"time"
 
@@ -23,25 +22,9 @@ func NewYoutubeClient() Client {
 	return Client{}
 }
 
-func (c *Client) extractVideoID(url string) (string, error) {
-	// Regular expression to match the video ID in the YouTube URL
-	re := regexp.MustCompile(`(?:youtube(?:-nocookie)?\.com/(?:[^/\n\s]+/\S+/|(?:v|vi|e(?:mbed)?)/|\S*?[?&]v=)|youtu\.be/)([a-zA-Z0-9_-]{11})`)
-
-	matches := re.FindStringSubmatch(url)
-	if len(matches) == 0 {
-		return "", fmt.Errorf("unable to extract video ID from URL")
-	}
-
-	return matches[1], nil
-}
-
 func (c *Client) DownloadYouTubeMP3(url string) ([]byte, error) {
 
-	videoID, err := c.extractVideoID(url)
-	if err != nil {
-		return nil, err
-	}
-	filename, err := c.download(videoID)
+	filename, err := c.download(url)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +46,10 @@ func (c *Client) download(videoID string) (string, error) {
 	}
 
 	formats := video.Formats.WithAudioChannels() // only get videos with audio
-	stream, _, err := clientYoutube.GetStream(video, &formats[0])
+	fmt.Println(formats)
+	//testDownloader.DownloadComposite(ctx, "", video, "hd1080", "mp4")
+
+	stream, _, err := clientYoutube.GetStream(video, &formats[len(formats)-1])
 	if err != nil {
 		return "", err
 	}
@@ -90,11 +76,14 @@ func (c *Client) convertMp4ToMp3(fileName string) ([]byte, error) {
 	mp3File := fmt.Sprintf("%s.mp3", fileName)
 	//ffmpeg -i input_video.mp4 -vn -acodec libmp3lame -b:a 128k -ar 44100 -ac 2 -threads 4 -preset ultrafast output_audio.mp3
 
-	cmd := exec.Command("ffmpeg", "-hwaccel", "auto", "-i", fileName, "-vn", "-acodec", "libmp3lame", "-b:a", "96k", "-ar", "44100", "-ac", "2", "-s", "640x360", "-threads", "8", "-preset", "ultrafast", mp3File)
+	//cmd := exec.Command("ffmpeg", "-hwaccel", "auto", "-i", fileName, "-vn", "-acodec", "libmp3lame", "-b:a", "96k", "-ar", "44100", "-ac", "2", "-s", "640x360", "-threads", "8", "-preset", "ultrafast", mp3File)
 
 	//cmd := exec.Command("ffmpeg", "-i", fileName, "-vn", "-acodec", "libmp3lame",
 	//	"-b:a", "128k", "-ar", "44100", "-ac", "2", "-threads", "4", "-preset ultrafast", mp3File)
+	//cmd := exec.Command("ffmpeg", "-i", fileName, mp3File)
 
+	cmd := exec.Command("ffmpeg", "-i", fileName, "-vn", "-acodec", "libmp3lame", "-ac", "2",
+		"-ab", "16k", "-ar", "44100", mp3File)
 	fmt.Println(cmd.String())
 	err := cmd.Run()
 
