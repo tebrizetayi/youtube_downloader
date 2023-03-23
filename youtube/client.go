@@ -11,6 +11,10 @@ import (
 	"github.com/kkdai/youtube/v2"
 )
 
+var (
+	ErrExceedingDurationLimits = fmt.Errorf("video is exceeding the limits")
+)
+
 type YoutubeDownloader interface {
 	DownloadYouTubeMP3(url string) ([]byte, error)
 }
@@ -44,9 +48,11 @@ func (c *Client) download(videoID string) (string, error) {
 	if err != nil {
 		panic(err)
 	}
+	if video.Duration.Seconds() > 300.0 {
+		return "", ErrExceedingDurationLimits
+	}
 
 	formats := video.Formats.WithAudioChannels() // only get videos with audio
-	fmt.Println(formats)
 	//testDownloader.DownloadComposite(ctx, "", video, "hd1080", "mp4")
 
 	stream, _, err := clientYoutube.GetStream(video, &formats[len(formats)-1])
@@ -84,7 +90,6 @@ func (c *Client) convertMp4ToMp3(fileName string) ([]byte, error) {
 
 	cmd := exec.Command("ffmpeg", "-i", fileName, "-vn", "-acodec", "libmp3lame", "-ac", "2",
 		"-ab", "16k", "-ar", "44100", mp3File)
-	fmt.Println(cmd.String())
 	err := cmd.Run()
 
 	if err != nil {

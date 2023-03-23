@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"log"
 
 	"net/http"
 	"time"
@@ -26,6 +27,7 @@ func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	url := r.FormValue("url")
+	log.Println("Downloading:", url)
 
 	mp3File, err := c.YoutubeDownloader.DownloadYouTubeMP3(url)
 	if err != nil {
@@ -40,6 +42,7 @@ func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) 
 
 	// Copy the file to the response writer
 
+	log.Println("Downloaded:", url)
 	w.Write(mp3File)
 }
 
