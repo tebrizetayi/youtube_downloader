@@ -36,6 +36,7 @@ func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) 
 	}
 
 	// Set the response header to indicate the file download
+	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Disposition", "attachment; filename="+fmt.Sprintf("%s.mp3", time.Now().String()))
 	w.Header().Set("Content-Type", "audio/mpeg")
 	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(mp3File)))
