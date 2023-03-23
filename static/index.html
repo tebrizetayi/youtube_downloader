@@ -34,7 +34,7 @@
 			padding: 10px;
 			border: 2px solid #ccc;
 			border-radius: 4px;
-			width: 100%;
+			width: 97%;
 		}
 
 		button {
@@ -82,23 +82,23 @@
 			// Use a backend API to download the MP3 file and return the download link
 			const response = await fetch('/download?url=' + encodeURIComponent(url));
 
+			resultDiv.innerHTML = '<p>Downloading ...</p>';
+
 			if (!response.ok) {
 				const errorMessage = await response.text();
 				resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
 				return;
 			}
 
-
-
 			const blob = await response.blob();
 			const downloadLink = document.createElement('a');
 			downloadLink.href = URL.createObjectURL(blob);
-			downloadLink.download = url+".mp3"
+			downloadLink.download = url + ".mp3"
 			document.body.appendChild(downloadLink);
 			downloadLink.click();
 			document.body.removeChild(downloadLink);
 
-			resultDiv.innerHTML = '<p>Download is complete</p>';
+			resultDiv.innerHTML = '<p>Download is completed</p>';
 
 		});
 
