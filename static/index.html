@@ -1,13 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>MP3 Downloader</title>
+	<title>YouTube MP3 Downloader</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f5f5f5;
+		}
+		h1 {
+			text-align: center;
+			margin-top: 50px;
+			color: #333;
+		}
+		.container {
+			width: 50%;
+			margin: 50px auto;
+			background-color: #fff;
+			padding: 20px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;
+		}
+		label {
+			display: block;
+			margin-bottom: 10px;
+			color: #333;
+		}
+		input[type="text"] {
+			padding: 10px;
+			border: 2px solid #ccc;
+			border-radius: 4px;
+			width: 100%;
+		}
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			margin-top: 10px;
+		}
+		button:hover {
+			background-color: #45a049;
+		}
+	</style>
 </head>
 <body>
-	<h1>Enter URL to Download MP3:</h1>
-	<form action="/download" method="post">
-		<input type="text" name="url" placeholder="Enter URL">
-		<input type="submit" value="Download">
-	</form>
+	<h1>YouTube MP3 Downloader</h1>
+	<div class="container">
+		<form action="/download" method="post">
+			<label for="url-input">Enter YouTube URL:</label>
+			<input type="text" id="url-input" name="url" placeholder="Example: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+			<button type="submit">Download</button>
+		</form>
+		<div id="result"></div>
+	</div>
+	<script>
+		const form = document.getElementById('download-form');
+		const resultDiv = document.getElementById('result');
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			const urlInput = document.getElementById('url-input');
+			const url = urlInput.value.trim();
+
+			if (!url) {
+				resultDiv.innerHTML = '<p>Please enter a valid YouTube URL.</p>';
+				return;
+			}
+
+			// Use a backend API to download the MP3 file and return the download link
+			const downloadLink = await fetch('/api/download?url=' + encodeURIComponent(url))
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error('Unable to download MP3 file.');
+					}
+					return response.text();
+				})
+				.catch((error) => {
+					resultDiv.innerHTML = '<p>' + error.message + '</p>';
+				});
+
+			// Display the download link to the user
+			if (downloadLink) {
+				resultDiv.innerHTML = '<p><a href="' + downloadLink + '">Download MP3</a></p>';
+			}
+		});
+	</script>
 </body>
 </html>
