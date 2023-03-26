@@ -3,6 +3,7 @@ package youtube
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"regexp"
@@ -43,6 +44,7 @@ func (c *Client) DownloadYouTubeMP3(url string) ([]byte, error) {
 }
 
 func (c *Client) download(videoID string) (string, error) {
+	log.Println("downloading URL ", videoID)
 	clientYoutube := youtube.Client{}
 
 	video, err := clientYoutube.GetVideo(videoID)
@@ -72,12 +74,14 @@ func (c *Client) download(videoID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	log.Println("downloaded URL ", videoID)
 	return fileName, nil
 }
 
 func (c *Client) convertMp4ToMp3(fileName string) ([]byte, error) {
 	// Convert video to MP3
 
+	log.Println("Converting file to mp3", fileName)
 	mp3File := fmt.Sprintf("%s.mp3", fileName)
 	//ffmpeg -i input_video.mp4 -vn -acodec libmp3lame -b:a 128k -ar 44100 -ac 2 -threads 4 -preset ultrafast output_audio.mp3
 
@@ -99,6 +103,8 @@ func (c *Client) convertMp4ToMp3(fileName string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	log.Println("Converted file to mp3", fileName)
 	return mp3Bytes, nil
 
 }
