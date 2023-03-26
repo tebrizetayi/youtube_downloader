@@ -6,11 +6,26 @@ import (
 
 func TestYoutubeMp3_Success(t *testing.T) {
 
+	testTable := []struct {
+		URL string
+		err error
+	}{
+		{
+			err: nil,
+			URL: "https://www.youtube.com/watch?v=8aw6lLu-iBo",
+		},
+		{
+			err: nil,
+			URL: "https://www.youtube.com/watch?v=8qjc7CMRZMA",
+		},
+	}
 	youtubeClient := NewYoutubeClient()
-	_, err := youtubeClient.DownloadYouTubeMP3("https://www.youtube.com/watch?v=8aw6lLu-iBo")
-	if err != nil {
-		t.Error("error during converting youtube video to mp3", err)
-		return
+	for _, test := range testTable {
+		_, err := youtubeClient.DownloadYouTubeMP3(test.URL)
+		if test.err != err {
+			t.Error("error during converting youtube video to mp3", err)
+			return
+		}
 	}
 
 }

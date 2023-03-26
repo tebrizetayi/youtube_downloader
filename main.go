@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"youtube_download/api"
 	"youtube_download/youtube"
@@ -53,4 +54,9 @@ func main() {
 	case sig := <-shutdown:
 		log.Printf("main : %v : Start shutdown..", sig)
 	}
+}
+
+// ConvertIntToString : Convert int to string
+func ConvertIntToString(i int) string {
+	return strconv.Itoa(i)
 }

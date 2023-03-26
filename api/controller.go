@@ -51,3 +51,8 @@ func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) 
 func (c *YoutubeController) ServeIndex(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/index.html")
 }
+
+// Get url and response the time of the request time
+func (c *YoutubeController) GetTime(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(time.Now().String()))
+}

@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 	"time"
 
@@ -59,9 +60,7 @@ func (c *Client) download(videoID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	fileName := video.Title + fmt.Sprintf("%d.mp4", time.Now().UnixNano())
-	fileName = strings.ReplaceAll(strings.ToLower(fileName), " ", "_")
+	fileName := renameVideoFileName(video.Title)
 
 	file, err := os.Create(fileName)
 	if err != nil {
@@ -102,4 +101,12 @@ func (c *Client) convertMp4ToMp3(fileName string) ([]byte, error) {
 	}
 	return mp3Bytes, nil
 
+}
+
+// Renaming the filename
+func renameVideoFileName(videoFileName string) string {
+	fileName := videoFileName + fmt.Sprintf("%d.mp4", time.Now().UnixNano())
+	re := regexp.MustCompile(`[/\\:*?"<>|\s()]`)
+	fileName = strings.ToLower(re.ReplaceAllString(fileName, "_"))
+	return fileName
 }
