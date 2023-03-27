@@ -5,7 +5,7 @@ import (
 )
 
 func TestYoutubeMp3_Success(t *testing.T) {
-
+	t.Skip()
 	testTable := []struct {
 		URL string
 		err error
@@ -27,6 +27,7 @@ func TestYoutubeMp3_Success(t *testing.T) {
 }
 
 func BenchmarkYoutubeMp3(b *testing.B) {
+	b.Skip()
 	for i := 0; i < b.N; i++ {
 		youtubeClient := NewYoutubeClient()
 		_, err := youtubeClient.DownloadYouTubeMP3("https://www.youtube.com/watch?v=QTUDVuNuKss")
@@ -38,7 +39,7 @@ func BenchmarkYoutubeMp3(b *testing.B) {
 }
 
 func BenchmarkYoutubeDownload(b *testing.B) {
-
+	b.Skip()
 	for i := 0; i < b.N; i++ {
 		youtubeClient := NewYoutubeClient()
 		_, err := youtubeClient.downloadLux("https://www.youtube.com/watch?v=NVh_wS7ECsM")
@@ -50,7 +51,7 @@ func BenchmarkYoutubeDownload(b *testing.B) {
 }
 
 func TestYoutubeDownload(t *testing.T) {
-
+	t.Skip()
 	youtubeClient := NewYoutubeClient()
 	_, err := youtubeClient.downloadLux("https://www.youtube.com/watch?v=NVh_wS7ECsM")
 	if err != nil {

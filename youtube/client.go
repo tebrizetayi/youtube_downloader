@@ -124,7 +124,7 @@ func renameVideoFileName(videoFileName string) string {
 func (c *Client) downloadLux(url string) (string, error) {
 	fileName := fmt.Sprintf("%d", time.Now().UnixNano())
 
-	if err := app.New().Run([]string{"main", "-f", "140", "-O", fileName, url}); err != nil {
+	if err := app.New().Run([]string{"main", "--multi-thread", "-f", "140", "-O", fileName, url}); err != nil {
 		fmt.Fprintf(
 			color.Output,
 			"Run %s failed: %s\n",
