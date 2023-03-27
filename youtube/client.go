@@ -10,7 +10,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fatih/color"
+	"github.com/iawia002/lux/app"
 	"github.com/kkdai/youtube/v2"
+	//"github.com/rylio/ytdl"
 )
 
 var (
@@ -30,7 +33,7 @@ func NewYoutubeClient() Client {
 
 func (c *Client) DownloadYouTubeMP3(url string) ([]byte, error) {
 
-	filename, err := c.download(url)
+	filename, err := c.downloadLux(url)
 	if err != nil {
 		return nil, err
 	}
@@ -51,14 +54,15 @@ func (c *Client) download(videoID string) (string, error) {
 	if err != nil {
 		panic(err)
 	}
-	if video.Duration.Seconds() > 300.0 {
+	if video.Duration.Seconds() > 600.0 {
 		return "", ErrExceedingDurationLimits
 	}
 
 	formats := video.Formats.WithAudioChannels() // only get videos with audio
 	//testDownloader.DownloadComposite(ctx, "", video, "hd1080", "mp4")
 
-	stream, _, err := clientYoutube.GetStream(video, &formats[len(formats)-1])
+	//formats[0].AudioQuality
+	stream, _, err := clientYoutube.GetStream(video, &formats.Type("audio/mp4")[0])
 	if err != nil {
 		return "", err
 	}
@@ -91,8 +95,8 @@ func (c *Client) convertMp4ToMp3(fileName string) ([]byte, error) {
 	//	"-b:a", "128k", "-ar", "44100", "-ac", "2", "-threads", "4", "-preset ultrafast", mp3File)
 	//cmd := exec.Command("ffmpeg", "-i", fileName, mp3File)
 
-	cmd := exec.Command("ffmpeg", "-i", fileName, "-vn", "-acodec", "libmp3lame", "-ac", "2",
-		"-ab", "16k", "-ar", "44100", mp3File)
+	cmd := exec.Command("ffmpeg", "-i", fileName+".mp4", "-vn", "-acodec", "libmp3lame", "-ac", "2",
+		"-ab", "256k", "-ar", "44100", mp3File)
 	err := cmd.Run()
 
 	if err != nil {
@@ -115,4 +119,19 @@ func renameVideoFileName(videoFileName string) string {
 	re := regexp.MustCompile(`[/\\:*?"<>|\s()]`)
 	fileName = strings.ToLower(re.ReplaceAllString(fileName, "_"))
 	return fileName
+}
+
+func (c *Client) downloadLux(url string) (string, error) {
+	fileName := fmt.Sprintf("%d", time.Now().UnixNano())
+
+	if err := app.New().Run([]string{"main", "-f", "140", "-O", fileName, url}); err != nil {
+		fmt.Fprintf(
+			color.Output,
+			"Run %s failed: %s\n",
+			color.CyanString("%s", app.Name), color.RedString("%v", err),
+		)
+		return "", err
+	}
+
+	return fileName, nil
 }

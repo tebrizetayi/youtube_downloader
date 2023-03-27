@@ -12,10 +12,10 @@ COPY . /go/src/app
 
 # Download any needed dependencies specified in go.mod
 RUN go mod download
+RUN go install github.com/iawia002/lux@latest
 
 
-
-RUN go test ./...
+RUN go test ./... -v
 # Build the application
 
 RUN go build -o main .
