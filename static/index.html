@@ -50,7 +50,24 @@
 		button:hover {
 			background-color: #45a049;
 		}
+
+		.spinner {
+			width: 20px;
+			height: 20px;
+			border: 2px solid #ccc;
+			border-top-color: #666;
+			border-radius: 50%;
+			animation: spin 1s linear infinite;
+			display: none;
+		}
+
+		@keyframes spin {
+			to {
+				transform: rotate(360deg);
+			}
+		}
 	</style>
+	<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
 </head>
 
 <body>
@@ -61,29 +78,35 @@
 			<input name="url" type="text" id="url-input"
 				placeholder="Example: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
 			<button type="submit">Download</button>
+			<div class="spinner"></div>
 		</form>
+		
 		<div id="result"></div>
 	</div>
 	<script>
 		const form = document.getElementById('download-form');
 		const resultDiv = document.getElementById('result');
+		const spinner = document.getElementsByClassName('spinner')[0];
 
 		form.addEventListener('submit', async (event) => {
 			event.preventDefault();
 			const urlInput = document.getElementById('url-input');
 			const url = urlInput.value.trim();
-
+			spinner.style.display = 'none';
 			resultDiv.innerHTML = ""
 			if (!url) {
 				resultDiv.innerHTML = '<p>Please enter a valid YouTube URL.</p>';
 				return;
 			}
 
+			// Show the loading spinner
+			spinner.style.display = 'inline-block';
 			// Use a backend API to download the MP3 file and return the download link
 			const response = await fetch('/download?url=' + encodeURIComponent(url));
-
 			resultDiv.innerHTML = '<p>Downloading ...</p>';
 
+			// Hide the loading spinner
+			spinner.style.display = 'none';
 			if (!response.ok) {
 				const errorMessage = await response.text();
 				resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
@@ -97,9 +120,7 @@
 			document.body.appendChild(downloadLink);
 			downloadLink.click();
 			document.body.removeChild(downloadLink);
-
 			resultDiv.innerHTML = '<p>Download is completed</p>';
-
 		});
 
 	</script>

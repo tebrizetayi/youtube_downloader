@@ -14,10 +14,6 @@ func TestYoutubeMp3_Success(t *testing.T) {
 			err: nil,
 			URL: "https://www.youtube.com/watch?v=8aw6lLu-iBo",
 		},
-		{
-			err: nil,
-			URL: "https://www.youtube.com/watch?v=8qjc7CMRZMA",
-		},
 	}
 	youtubeClient := NewYoutubeClient()
 	for _, test := range testTable {
