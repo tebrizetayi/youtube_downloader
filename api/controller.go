@@ -7,14 +7,20 @@ import (
 	"net/http"
 	"time"
 	"youtube_download/mp3downloader"
+	"youtube_download/youtubevideoprofiler"
 )
 
 type YoutubeConvertorController struct {
 	mp3downloader.Mp3downloader
+	YVideoprofiler youtubevideoprofiler.YVideoprofiler
 }
 
-func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader) YoutubeConvertorController {
-	return YoutubeConvertorController{mp3Downloader}
+func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader,
+	youtubevideoprofiler youtubevideoprofiler.YVideoprofiler,
+) YoutubeConvertorController {
+	return YoutubeConvertorController{
+		mp3Downloader,
+		youtubevideoprofiler}
 
 }
 
@@ -28,6 +34,13 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	}
 	url := r.FormValue("url")
 	log.Println("Downloading:", url)
+
+	// Check if the video is longer than 10 minutes
+	isValid, _ := c.YVideoprofiler.CheckDuration(url, 600)
+	if !isValid {
+		http.Error(w, "Video is longer than 10 minutes", http.StatusBadRequest)
+		return
+	}
 
 	mp3File, _, err := c.Mp3downloader.DownloadMp3(url)
 	if err != nil {

@@ -6,6 +6,7 @@ require (
 	github.com/fatih/color v1.15.0
 	github.com/gorilla/mux v1.8.0
 	github.com/iawia002/lux v0.17.1
+	github.com/kkdai/youtube/v2 v2.7.18
 )
 
 require (
@@ -24,7 +25,6 @@ require (
 	github.com/itchyny/gojq v0.12.12 // indirect
 	github.com/itchyny/timefmt-go v0.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kkdai/youtube/v2 v2.7.18 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
