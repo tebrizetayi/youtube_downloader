@@ -1,10 +1,13 @@
 package youtubevideoprofiler
 
 import (
+	"context"
 	"testing"
 )
 
 func TestYVideoProfiler_Success(t *testing.T) {
+	ctx := context.Background()
+
 	testTable := []struct {
 		URL string
 		err error
@@ -16,7 +19,7 @@ func TestYVideoProfiler_Success(t *testing.T) {
 	}
 	yvideoProfiler := NewYoutubevideoprofiler()
 	for _, test := range testTable {
-		_, err := yvideoProfiler.Info(test.URL)
+		_, err := yvideoProfiler.Info(ctx, test.URL)
 		if test.err != err {
 			t.Error("error during getting video profile", err)
 			return
@@ -25,6 +28,7 @@ func TestYVideoProfiler_Success(t *testing.T) {
 }
 
 func TestYVideoProfiler_Duration(t *testing.T) {
+	ctx := context.Background()
 	testTable := []struct {
 		URL              string
 		duration         float64
@@ -46,7 +50,7 @@ func TestYVideoProfiler_Duration(t *testing.T) {
 	}
 	yvideoProfiler := NewYoutubevideoprofiler()
 	for _, test := range testTable {
-		isWithinDuration, err := yvideoProfiler.CheckDuration(test.URL, test.duration)
+		isWithinDuration, err := yvideoProfiler.CheckDuration(ctx, test.URL, test.duration)
 		if test.err != err || test.isWithinDuration != isWithinDuration {
 			t.Error("error cheking video profile", err)
 			return

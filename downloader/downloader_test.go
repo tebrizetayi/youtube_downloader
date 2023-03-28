@@ -1,12 +1,13 @@
 package downloader
 
 import (
+	"context"
 	"os"
 	"testing"
 )
 
 func TestDownloader_Success(t *testing.T) {
-
+	ctx := context.Background()
 	testTable := []struct {
 		URL string
 		err error
@@ -18,7 +19,7 @@ func TestDownloader_Success(t *testing.T) {
 	}
 	downloader := NewDownloader()
 	for _, test := range testTable {
-		fileName, err := downloader.Download(test.URL)
+		fileName, err := downloader.Download(ctx, test.URL)
 		if test.err != err {
 			t.Error("error during downloading video", err)
 			return
@@ -73,9 +74,10 @@ func TestYoutubeDownload(t *testing.T) {
 
 func BenchmarkYoutubeDownload(b *testing.B) {
 	b.Skip()
+	ctx := context.Background()
 	downloader := NewDownloader()
 	for i := 0; i < b.N; i++ {
-		fileName, err := downloader.Download("https://www.youtube.com/watch?v=fYU-cz9j61g")
+		fileName, err := downloader.Download(ctx, "https://www.youtube.com/watch?v=fYU-cz9j61g")
 		if err != nil {
 			b.Error("error during downloading video", err)
 			return

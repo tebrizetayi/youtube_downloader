@@ -1,6 +1,7 @@
 package mp3downloader
 
 import (
+	"context"
 	"os"
 	"strings"
 	"testing"
@@ -10,6 +11,7 @@ import (
 
 func TestMp3Downloader_Success(t *testing.T) {
 
+	ctx := context.Background()
 	testTable := []struct {
 		URL string
 		err error
@@ -23,7 +25,7 @@ func TestMp3Downloader_Success(t *testing.T) {
 	convertor := convertor.NewConverter()
 	mp3downloader := NewMp3downloader(&downloader, &convertor)
 	for _, test := range testTable {
-		_, mp3Filename, err := mp3downloader.DownloadMp3(test.URL)
+		_, mp3Filename, err := mp3downloader.DownloadMp3(ctx, test.URL)
 		if test.err != err {
 			t.Error("error during downloading youtube video to mp3", err)
 			return

@@ -1,12 +1,14 @@
 package youtubevideoprofiler
 
 import (
+	"context"
+
 	"github.com/kkdai/youtube/v2"
 )
 
 type YVideoprofiler interface {
-	Info(videoID string) (*youtube.Video, error)
-	CheckDuration(videoID string, timeConstraint float64) (bool, error)
+	Info(ctx context.Context, videoID string) (*youtube.Video, error)
+	CheckDuration(ctx context.Context, videoID string, timeConstraint float64) (bool, error)
 }
 
 type Client struct {
@@ -16,7 +18,7 @@ func NewYoutubevideoprofiler() Client {
 	return Client{}
 }
 
-func (c *Client) Info(videoID string) (*youtube.Video, error) {
+func (c *Client) Info(ctx context.Context, videoID string) (*youtube.Video, error) {
 	clientYoutube := youtube.Client{}
 
 	video, err := clientYoutube.GetVideo(videoID)
@@ -27,8 +29,8 @@ func (c *Client) Info(videoID string) (*youtube.Video, error) {
 	return video, nil
 }
 
-func (c *Client) CheckDuration(videoID string, timeConstraint float64) (bool, error) {
-	video, err := c.Info(videoID)
+func (c *Client) CheckDuration(ctx context.Context, videoID string, timeConstraint float64) (bool, error) {
+	video, err := c.Info(ctx, videoID)
 	if err != nil {
 		return false, err
 	}

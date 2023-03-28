@@ -1,6 +1,7 @@
 package convertor
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -8,7 +9,7 @@ import (
 )
 
 type Converter interface {
-	ConvertMp4ToMp3(fileName string, outputFileName string) ([]byte, error)
+	ConvertMp4ToMp3(ctx context.Context, fileName string, outputFileName string) ([]byte, error)
 }
 type Client struct {
 }
@@ -17,7 +18,7 @@ func NewConverter() Client {
 	return Client{}
 }
 
-func (c *Client) ConvertMp4ToMp3(fileName string, outputFilename string) ([]byte, error) {
+func (c *Client) ConvertMp4ToMp3(ctx context.Context, fileName string, outputFilename string) ([]byte, error) {
 	// Convert video to MP3
 
 	log.Println("Converting file to mp3", fileName)

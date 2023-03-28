@@ -1,6 +1,7 @@
 package downloader
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"strings"
@@ -16,7 +17,7 @@ var (
 )
 
 type Downloader interface {
-	Download(url string) (string, error)
+	Download(ctx context.Context, url string) (string, error)
 }
 
 type Client struct {
@@ -34,7 +35,7 @@ func (c *Client) RenameVideoFileName(videoFileName string) string {
 	return fileName
 }
 
-func (c *Client) Download(url string) (string, error) {
+func (c *Client) Download(ctx context.Context, url string) (string, error) {
 	fileName := fmt.Sprintf("%d", time.Now().UnixNano())
 	if err := app.New().Run([]string{"main", "--multi-thread", "-f", "140", "-O", fileName, url}); err != nil {
 		fmt.Fprintf(

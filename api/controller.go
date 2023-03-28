@@ -27,7 +27,7 @@ func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader,
 // DownloadMp3
 func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.Request) {
 	// Open the file to be downloaded
-
+	ctx := r.Context()
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Error parsing form data", http.StatusBadRequest)
 		return
@@ -36,13 +36,13 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	log.Println("Downloading:", url)
 
 	// Check if the video is longer than 10 minutes
-	isValid, _ := c.YVideoprofiler.CheckDuration(url, 600)
+	isValid, _ := c.YVideoprofiler.CheckDuration(ctx, url, 600)
 	if !isValid {
 		http.Error(w, "Video is longer than 10 minutes", http.StatusBadRequest)
 		return
 	}
 
-	mp3File, _, err := c.Mp3downloader.DownloadMp3(url)
+	mp3File, _, err := c.Mp3downloader.DownloadMp3(ctx, url)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
