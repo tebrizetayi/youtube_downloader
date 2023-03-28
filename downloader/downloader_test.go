@@ -70,3 +70,20 @@ func TestYoutubeDownload(t *testing.T) {
 }
 
 */
+
+func BenchmarkYoutubeDownload(b *testing.B) {
+	b.Skip()
+	downloader := NewDownloader()
+	for i := 0; i < b.N; i++ {
+		fileName, err := downloader.Download("https://www.youtube.com/watch?v=fYU-cz9j61g")
+		if err != nil {
+			b.Error("error during downloading video", err)
+			return
+		}
+
+		if err := os.Remove(fileName + ".mp4"); err != nil {
+			b.Error("error during removing downloaded video", err)
+			return
+		}
+	}
+}
