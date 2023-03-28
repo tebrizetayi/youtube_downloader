@@ -87,13 +87,17 @@
 		const form = document.getElementById('download-form');
 		const resultDiv = document.getElementById('result');
 		const spinner = document.getElementsByClassName('spinner')[0];
+		const videoDetailsDiv = document.getElementById('video-details');
 
 		form.addEventListener('submit', async (event) => {
 			event.preventDefault();
 			const urlInput = document.getElementById('url-input');
 			const url = urlInput.value.trim();
 			spinner.style.display = 'none';
+	
 			resultDiv.innerHTML = ""
+			videoDetailsDiv.innerHTML = ""
+
 			if (!url) {
 				resultDiv.innerHTML = '<p>Please enter a valid YouTube URL.</p>';
 				return;
@@ -109,7 +113,6 @@
 			const duration = videoDetails.duration;
 			const description = videoDetails.description;
 
-			const videoDetailsDiv = document.getElementById('video-details');
 			videoDetailsDiv.innerHTML = '<h3>Video Details</h3>' +
 				'<p><strong>Title:</strong> ' + videoTitle + '</p>' +
 				'<p><strong>Duration:</strong> ' + duration + '</p>' ;
