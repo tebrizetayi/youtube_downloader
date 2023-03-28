@@ -58,3 +58,32 @@ func TestYVideoProfiler_Duration(t *testing.T) {
 
 	}
 }
+
+func TestYVideoProfiler_IsValid(t *testing.T) {
+	ctx := context.Background()
+	testTable := []struct {
+		URL    string
+		result bool
+		err    error
+	}{
+		{
+			URL:    "https://www.youtube.com/watch?v=8aw6lLu-iBo",
+			result: true,
+			err:    nil,
+		},
+		{
+			URL:    "https://www.youtube.com/watch?v=fYU-cz9j7843g",
+			result: false,
+			err:    ErrVideoNotFound,
+		},
+	}
+	yvideoProfiler := NewYoutubevideoprofiler()
+	for _, test := range testTable {
+		result, err := yvideoProfiler.IsAvailable(ctx, test.URL)
+		if test.err != err || test.result != result {
+			t.Error("error cheking video profile", err)
+			return
+		}
+
+	}
+}

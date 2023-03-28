@@ -36,6 +36,13 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	url := r.FormValue("url")
 	log.Println("Downloading:", url)
 
+	// Check if the video is exists and public
+	IsAvailable, err := c.YVideoprofiler.IsAvailable(ctx, url)
+	if !IsAvailable {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
 	// Check if the video is longer than 10 minutes
 	isValid, _ := c.YVideoprofiler.CheckDuration(ctx, url, 600)
 	if !isValid {
@@ -74,6 +81,7 @@ func (c *YoutubeConvertorController) GetTime(w http.ResponseWriter, r *http.Requ
 type VideoInfo struct {
 	Duration string `json:"duration"`
 	Title    string `json:"title"`
+	Error    string `json:"error"`
 }
 
 func (c *YoutubeConvertorController) Info(w http.ResponseWriter, r *http.Request) {

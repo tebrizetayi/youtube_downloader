@@ -1,146 +1,216 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-	<title>YouTube MP3 Downloader</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #f5f5f5;
-		}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>OnlyMP3 - YouTube to MP3 Converter</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Custom CSS -->
+  <style>
+    body {
+      background-color: #f9f9f9;
+      margin-top: 100px;
+    }
 
-		h1 {
-			text-align: center;
-			margin-top: 50px;
-			color: #333;
-		}
+    .form-control {
+      border-color: #cfcfcf;
+      height: 50px;
+      font-size: 16px;
+      font-weight: 400;
+      padding: 12px 20px;
+      color: #222;
+      background-color: #fff;
+    }
 
-		.container {
-			width: 50%;
-			margin: 50px auto;
-			background-color: #fff;
-			padding: 20px;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-			border-radius: 10px;
-		}
+    .btn-primary {
+      border-color: #ff3300;
+      background-color: #ff3300;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 400;
+      padding: 12px 20px;
+    }
 
-		label {
-			display: block;
-			margin-bottom: 10px;
-			color: #333;
-		}
+    .btn-primary:hover {
+      border-color: #ff3300;
+      background-color: #ff4d4d;
+      color: #fff;
+    }
 
-		input[type="text"] {
-			padding: 10px;
-			border: 2px solid #ccc;
-			border-radius: 4px;
-			width: 97%;
-		}
+    .center-div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-		button {
-			background-color: #4CAF50;
-			color: white;
-			padding: 10px 20px;
-			border: none;
-			border-radius: 4px;
-			cursor: pointer;
-			margin-top: 10px;
-		}
+    h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      color: #222;
+    }
 
-		button:hover {
-			background-color: #45a049;
-		}
+    .btn-primary:focus,
+    .btn-primary:active,
+    .btn-primary.active,
+    .open .dropdown-toggle.btn-primary {
+      background-color: red !important;
+      border-color: red !important;
+    }
 
-		.spinner {
-			width: 20px;
-			height: 20px;
-			border: 2px solid #ccc;
-			border-top-color: #666;
-			border-radius: 50%;
-			animation: spin 1s linear infinite;
-			display: none;
-		}
+    /*.spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-top-color: #666;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
 
-		@keyframes spin {
-			to {
-				transform: rotate(360deg);
-			}
-		}
-	</style>
-	<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }*/
+  </style>
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
 </head>
 
 <body>
-	<h1>YouTube MP3 Downloader</h1>
-	<div class="container">
-		<form id="download-form">
-			<label for="url-input">Enter YouTube URL:</label>
-			<input name="url" type="text" id="url-input"
-				placeholder="Example: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-			<button type="submit">Download</button>
-			<div class="spinner"></div>
-		</form>
-		<div id="video-details"></div>
-		<div id="result"></div>
-	</div>
-	<script>
-		const form = document.getElementById('download-form');
-		const resultDiv = document.getElementById('result');
-		const spinner = document.getElementsByClassName('spinner')[0];
-		const videoDetailsDiv = document.getElementById('video-details');
+  <div class="center-div">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <h1>Convert YouTube Videos to MP3</h1>
+          <form class="d-flex" id="download-form">
+            <input class="form-control me-2" type="search" placeholder="Enter YouTube video URL" aria-label="Search"
+              id="url-input">
+            <button class="btn btn-primary" type="submit">
+              <span id="convert-text">Convert</span>
+            </button>
+          </form>
+        </div>
+        <div class="col-md-8 offset-md-2 mt-4">
+          <div class="spinner center-div" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only"></span>
+            </div>
+            <div class="spinner-border text-secondary" role="status">
+              <span class="sr-only"></span>
+            </div>
+            <div class="spinner-border text-success" role="status">
+              <span class="sr-only"></span>
+            </div>
+            <div class="spinner-border text-danger" role="status">
+              <span class="sr-only"></span>
+            </div>
+            <div class="spinner-border text-warning" role="status">
+              <span class="sr-only"></span>
+            </div>
+            <div class="spinner-border text-info" role="status">
+              <span class="sr-only"></span>
+            </div>
+            <div class="spinner-border text-dark" role="status">
+              <span class="sr-only"></span>
+            </div>
+          </div>
 
-		form.addEventListener('submit', async (event) => {
-			event.preventDefault();
-			const urlInput = document.getElementById('url-input');
-			const url = urlInput.value.trim();
-			spinner.style.display = 'none';
-	
-			resultDiv.innerHTML = ""
-			videoDetailsDiv.innerHTML = ""
+          <div class="row mt-5" id="video-details" style="display: none;">
+            <div class="col-md-12">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Video Title</th>
+                    <th>Duration</th>
+                  </tr>
+                </thead>
+                <tbody id="video-details-table">
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-			if (!url) {
-				resultDiv.innerHTML = '<p>Please enter a valid YouTube URL.</p>';
-				return;
-			}
+          <div id="result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-			// Show the loading spinner
-			spinner.style.display = 'inline-block';
+  <script>
+    const form = document.getElementById('download-form');
+    const resultDiv = document.getElementById('result');
+    const spinner = document.getElementsByClassName('spinner')[0];
+    const videoDetailsDiv = document.getElementById('video-details');
+    const videoDetailsDuration = document.getElementById('video-duration');
+    const videoDetailsTitle = document.getElementById('video-title');
+    const videoDetailstable = document.getElementById('video-details-table');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const urlInput = document.getElementById('url-input');
+      const url = urlInput.value.trim();
+      spinner.style.display = 'none';
+
+      resultDiv.innerHTML = ""
+      videoDetailstable.innerHTML=""
+      videoDetailsDiv.style.display = 'none';
+      
+      if (!url) {
+        resultDiv.innerHTML = '<p>Please enter a valid YouTube URL.</p>';
+        return;
+      }
+
+      // Show the loading spinner
+      spinner.style.display = 'flex';
 
 
-			const videoDetailsResponse = await fetch('/info?url=' + encodeURIComponent(url));
-			const videoDetails = await videoDetailsResponse.json();
-			const videoTitle = videoDetails.title;
-			const duration = videoDetails.duration;
-			const description = videoDetails.description;
+      const videoDetailsResponse = await fetch('/info?url=' + encodeURIComponent(url));
+      const videoDetails = await videoDetailsResponse.json();
+      const videoTitle = videoDetails.title;
+      const duration = videoDetails.duration;
 
-			videoDetailsDiv.innerHTML = '<h3>Video Details</h3>' +
-				'<p><strong>Title:</strong> ' + videoTitle + '</p>' +
-				'<p><strong>Duration:</strong> ' + duration + '</p>' ;
+      videoDetailsDiv.style.display = 'flex';
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+      <td>${videoTitle}</td>
+      <td>${duration}</td>
+    `;
+      videoDetailstable.appendChild(newRow);
 
 
-			// Use a backend API to download the MP3 file and return the download link
-			const response = await fetch('/download?url=' + encodeURIComponent(url));
-			resultDiv.innerHTML = '<p>Downloading ...</p>';
+      // Use a backend API to download the MP3 file and return the download link
+      const response = await fetch('/download?url=' + encodeURIComponent(url));
+      resultDiv.innerHTML = '<p>Downloading ...</p>';
 
-			// Hide the loading spinner
-			spinner.style.display = 'none';
-			if (!response.ok) {
-				const errorMessage = await response.text();
-				resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
-				return;
-			}
+      // Hide the loading spinner
+      spinner.style.display = 'none';
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
+        return;
+      }
 
-			const blob = await response.blob();
-			const downloadLink = document.createElement('a');
-			downloadLink.href = URL.createObjectURL(blob);
-			downloadLink.download = url + ".mp3"
-			document.body.appendChild(downloadLink);
-			downloadLink.click();
-			document.body.removeChild(downloadLink);
-			resultDiv.innerHTML = '<p>Download is completed</p>';
-		});
+      const blob = await response.blob();
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = url + ".mp3"
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      resultDiv.innerHTML = '<p>Download is completed</p>';
+    });
 
-	</script>
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
 </body>
 
 </html>

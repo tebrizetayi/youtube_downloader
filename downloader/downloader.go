@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/iawia002/lux/app"
 	//"github.com/rylio/ytdl"
 )
@@ -38,11 +37,6 @@ func (c *Client) RenameVideoFileName(videoFileName string) string {
 func (c *Client) Download(ctx context.Context, url string) (string, error) {
 	fileName := fmt.Sprintf("%d", time.Now().UnixNano())
 	if err := app.New().Run([]string{"main", "--multi-thread", "-f", "140", "-O", fileName, url}); err != nil {
-		fmt.Fprintf(
-			color.Output,
-			"Run %s failed: %s\n",
-			color.CyanString("%s", app.Name), color.RedString("%v", err),
-		)
 		return "", err
 	}
 

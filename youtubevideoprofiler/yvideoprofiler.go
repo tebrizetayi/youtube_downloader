@@ -2,13 +2,20 @@ package youtubevideoprofiler
 
 import (
 	"context"
+	"errors"
+	"log"
 
 	"github.com/kkdai/youtube/v2"
+)
+
+var (
+	ErrVideoNotFound = errors.New("video not found")
 )
 
 type YVideoprofiler interface {
 	Info(ctx context.Context, videoID string) (*youtube.Video, error)
 	CheckDuration(ctx context.Context, videoID string, timeConstraint float64) (bool, error)
+	IsAvailable(ctx context.Context, videoID string) (bool, error)
 }
 
 type Client struct {
@@ -39,5 +46,14 @@ func (c *Client) CheckDuration(ctx context.Context, videoID string, timeConstrai
 		return false, nil
 	}
 
+	return true, nil
+}
+
+func (c *Client) IsAvailable(ctx context.Context, videoID string) (bool, error) {
+	_, err := c.Info(ctx, videoID)
+	if err != nil {
+		log.Println(err)
+		return false, ErrVideoNotFound
+	}
 	return true, nil
 }
