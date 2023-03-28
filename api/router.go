@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func NewAPI(y YoutubeController) http.Handler {
+func NewAPI(y YoutubeConvertorController) http.Handler {
 	router := mux.NewRouter()
 
 	// Create a file server handler that serves static files from the "static" directory

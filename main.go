@@ -8,7 +8,9 @@ import (
 	"strconv"
 	"syscall"
 	"youtube_download/api"
-	"youtube_download/youtube"
+	"youtube_download/convertor"
+	"youtube_download/downloader"
+	"youtube_download/mp3downloader"
 )
 
 func main() {
@@ -29,8 +31,10 @@ func main() {
 	serverErrors := make(chan error, 1)
 
 	// Services
-	youtubeClient := youtube.NewYoutubeClient()
-	controller := api.NewYoutubeController(&youtubeClient)
+	downloader := downloader.NewDownloader()
+	convertor := convertor.NewConverter()
+	mp3downloader := mp3downloader.NewMp3downloader(&downloader, &convertor)
+	controller := api.NewYoutubeController(&mp3downloader)
 
 	// Start the HTTP service listening for requests.
 	api := http.Server{

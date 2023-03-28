@@ -6,20 +6,20 @@ import (
 
 	"net/http"
 	"time"
-	"youtube_download/youtube"
+	"youtube_download/mp3downloader"
 )
 
-type YoutubeController struct {
-	youtube.YoutubeDownloader
+type YoutubeConvertorController struct {
+	mp3downloader.Mp3downloader
 }
 
-func NewYoutubeController(downloader youtube.YoutubeDownloader) YoutubeController {
-	return YoutubeController{downloader}
+func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader) YoutubeConvertorController {
+	return YoutubeConvertorController{mp3Downloader}
 
 }
 
 // DownloadMp3
-func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) {
+func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.Request) {
 	// Open the file to be downloaded
 
 	if err := r.ParseForm(); err != nil {
@@ -29,7 +29,7 @@ func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) 
 	url := r.FormValue("url")
 	log.Println("Downloading:", url)
 
-	mp3File, err := c.YoutubeDownloader.DownloadYouTubeMP3(url)
+	mp3File, _, err := c.Mp3downloader.DownloadMp3(url)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
@@ -48,11 +48,11 @@ func (c *YoutubeController) DownloadMp3(w http.ResponseWriter, r *http.Request) 
 }
 
 // ServeIndex
-func (c *YoutubeController) ServeIndex(w http.ResponseWriter, r *http.Request) {
+func (c *YoutubeConvertorController) ServeIndex(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/index.html")
 }
 
 // Get url and response the time of the request time
-func (c *YoutubeController) GetTime(w http.ResponseWriter, r *http.Request) {
+func (c *YoutubeConvertorController) GetTime(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(time.Now().String()))
 }

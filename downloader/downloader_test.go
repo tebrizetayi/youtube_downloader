@@ -1,11 +1,12 @@
-package youtube
+package downloader
 
 import (
+	"os"
 	"testing"
 )
 
-func TestYoutubeMp3_Success(t *testing.T) {
-	t.Skip()
+func TestDownloader_Success(t *testing.T) {
+
 	testTable := []struct {
 		URL string
 		err error
@@ -15,17 +16,24 @@ func TestYoutubeMp3_Success(t *testing.T) {
 			URL: "https://www.youtube.com/watch?v=8aw6lLu-iBo",
 		},
 	}
-	youtubeClient := NewYoutubeClient()
+	downloader := NewDownloader()
 	for _, test := range testTable {
-		_, err := youtubeClient.DownloadYouTubeMP3(test.URL)
+		fileName, err := downloader.Download(test.URL)
 		if test.err != err {
-			t.Error("error during converting youtube video to mp3", err)
+			t.Error("error during downloading video", err)
 			return
 		}
+
+		if err := os.Remove(fileName + ".mp4"); err != nil {
+			t.Error("error during removing downloaded video", err)
+			return
+		}
+
 	}
 
 }
 
+/*
 func BenchmarkYoutubeMp3(b *testing.B) {
 	b.Skip()
 	for i := 0; i < b.N; i++ {
@@ -60,3 +68,5 @@ func TestYoutubeDownload(t *testing.T) {
 	}
 
 }
+
+*/
