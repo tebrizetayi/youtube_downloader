@@ -16,6 +16,7 @@ func NewAPI(y YoutubeConvertorController) http.Handler {
 	// Register the file server handler to serve static files at the "/static/" URL path
 	//router.Handle("/static/", http.StripPrefix("/static/", fileServer))
 	router.HandleFunc("/download", y.DownloadMp3)
+	router.HandleFunc("/info", y.Info)
 	router.HandleFunc("/", y.ServeIndex)
 	return router
 }

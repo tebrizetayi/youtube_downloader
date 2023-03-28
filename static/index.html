@@ -80,7 +80,7 @@
 			<button type="submit">Download</button>
 			<div class="spinner"></div>
 		</form>
-		
+		<div id="video-details"></div>
 		<div id="result"></div>
 	</div>
 	<script>
@@ -101,6 +101,20 @@
 
 			// Show the loading spinner
 			spinner.style.display = 'inline-block';
+
+
+			const videoDetailsResponse = await fetch('/info?url=' + encodeURIComponent(url));
+			const videoDetails = await videoDetailsResponse.json();
+			const videoTitle = videoDetails.title;
+			const duration = videoDetails.duration;
+			const description = videoDetails.description;
+
+			const videoDetailsDiv = document.getElementById('video-details');
+			videoDetailsDiv.innerHTML = '<h3>Video Details</h3>' +
+				'<p><strong>Title:</strong> ' + videoTitle + '</p>' +
+				'<p><strong>Duration:</strong> ' + duration + '</p>' ;
+
+
 			// Use a backend API to download the MP3 file and return the download link
 			const response = await fetch('/download?url=' + encodeURIComponent(url));
 			resultDiv.innerHTML = '<p>Downloading ...</p>';

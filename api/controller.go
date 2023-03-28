@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -68,4 +69,29 @@ func (c *YoutubeConvertorController) ServeIndex(w http.ResponseWriter, r *http.R
 // Get url and response the time of the request time
 func (c *YoutubeConvertorController) GetTime(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(time.Now().String()))
+}
+
+type VideoInfo struct {
+	Duration string `json:"duration"`
+	Title    string `json:"title"`
+}
+
+func (c *YoutubeConvertorController) Info(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	url := r.URL.Query().Get("url")
+
+	video, err := c.YVideoprofiler.Info(ctx, url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	videoInfo := VideoInfo{
+		Duration: fmt.Sprintf("%d:%d minutes",
+			time.Duration(video.Duration.Seconds())/60,
+			time.Duration(video.Duration.Seconds())%60),
+		Title: video.Title,
+	}
+	jsonData, _ := json.Marshal(videoInfo)
+
+	w.Write(jsonData)
 }
