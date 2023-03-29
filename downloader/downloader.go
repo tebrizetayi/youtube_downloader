@@ -36,9 +36,8 @@ func (c *Client) RenameVideoFileName(videoFileName string) string {
 
 func (c *Client) Download(ctx context.Context, url string) (string, error) {
 	fileName := fmt.Sprintf("%d", time.Now().UnixNano())
-	if err := app.New().Run([]string{"main", "--multi-thread", "-f", "140", "-O", fileName, url}); err != nil {
+	if err := app.New().RunContext(ctx, []string{"main", "--multi-thread", "-f", "140", "-O", fileName, url}); err != nil {
 		return "", err
 	}
-
 	return fileName, nil
 }
