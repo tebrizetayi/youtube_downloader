@@ -79,7 +79,11 @@
       }
     }*/
   </style>
-  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon_96.png">
 </head>
 
 <body>
@@ -158,9 +162,9 @@
       spinner.style.display = 'none';
 
       resultDiv.innerHTML = ""
-      videoDetailstable.innerHTML=""
+      videoDetailstable.innerHTML = ""
       videoDetailsDiv.style.display = 'none';
-      
+
       if (!url) {
         resultDiv.innerHTML = '<p>Please enter a valid YouTube URL.</p>';
         return;
