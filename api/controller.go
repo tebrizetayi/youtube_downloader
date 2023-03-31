@@ -8,17 +8,17 @@ import (
 
 	"net/http"
 	"time"
-	"youtube_download/mp3downloader"
-	"youtube_download/youtubevideoprofiler"
+	"youtube_download/pkg/mp3downloader"
+	"youtube_download/pkg/youtubevideoprofiler"
 )
 
 type YoutubeConvertorController struct {
 	mp3downloader.Mp3downloader
-	YVideoprofiler youtubevideoprofiler.YVideoprofiler
+	YVideoprofiler youtubevideoprofiler.ProfilerClient
 }
 
 func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader,
-	youtubevideoprofiler youtubevideoprofiler.YVideoprofiler,
+	youtubevideoprofiler youtubevideoprofiler.ProfilerClient,
 ) YoutubeConvertorController {
 	return YoutubeConvertorController{
 		mp3Downloader,
@@ -40,14 +40,14 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	log.Println("Downloading:", url)
 
 	// Check if the video is exists and public
-	IsAvailable, err := c.YVideoprofiler.IsAvailable(ctx, url)
+	IsAvailable, err := c.YVideoprofiler.IsVideoAvailable(ctx, url)
 	if !IsAvailable {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
 	// Check if the video is longer than 10 minutes
-	isValid, _ := c.YVideoprofiler.CheckDuration(ctx, url, 600)
+	isValid, _ := c.YVideoprofiler.CheckVideoDuration(ctx, url, 600)
 	if !isValid {
 		http.Error(w, "Video is longer than 10 minutes", http.StatusBadRequest)
 		return
@@ -61,11 +61,11 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	case result = <-resultChan:
 		if result.Err != nil {
 			http.Error(w, err.Error(), http.StatusNotFound)
+
 			return
 		}
 	case <-ctx.Done():
-		// This case will be executed if the browser is closed before receiving the result
-		fmt.Println("Client disconnected")
+		log.Println("Connection is closed")
 		return
 	}
 
@@ -98,7 +98,7 @@ func (c *YoutubeConvertorController) Info(w http.ResponseWriter, r *http.Request
 	ctx := r.Context()
 	url := r.URL.Query().Get("url")
 
-	video, err := c.YVideoprofiler.Info(ctx, url)
+	video, err := c.YVideoprofiler.GetVideoInfo(ctx, url)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return

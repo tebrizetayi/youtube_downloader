@@ -17,9 +17,9 @@ func TestYVideoProfiler_Success(t *testing.T) {
 			URL: "https://www.youtube.com/watch?v=8aw6lLu-iBo",
 		},
 	}
-	yvideoProfiler := NewYoutubevideoprofiler()
+	yvideoProfiler := NewVideoProfiler()
 	for _, test := range testTable {
-		_, err := yvideoProfiler.Info(ctx, test.URL)
+		_, err := yvideoProfiler.GetVideoInfo(ctx, test.URL)
 		if test.err != err {
 			t.Error("error during getting video profile", err)
 			return
@@ -48,9 +48,9 @@ func TestYVideoProfiler_Duration(t *testing.T) {
 			err:              nil,
 		},
 	}
-	yvideoProfiler := NewYoutubevideoprofiler()
+	yvideoProfiler := NewVideoProfiler()
 	for _, test := range testTable {
-		isWithinDuration, err := yvideoProfiler.CheckDuration(ctx, test.URL, test.duration)
+		isWithinDuration, err := yvideoProfiler.CheckVideoDuration(ctx, test.URL, test.duration)
 		if test.err != err || test.isWithinDuration != isWithinDuration {
 			t.Error("error cheking video profile", err)
 			return
@@ -77,9 +77,9 @@ func TestYVideoProfiler_IsValid(t *testing.T) {
 			err:    ErrVideoNotFound,
 		},
 	}
-	yvideoProfiler := NewYoutubevideoprofiler()
+	yvideoProfiler := NewVideoProfiler()
 	for _, test := range testTable {
-		result, err := yvideoProfiler.IsAvailable(ctx, test.URL)
+		result, err := yvideoProfiler.IsVideoAvailable(ctx, test.URL)
 		if test.err != err || test.result != result {
 			t.Error("error cheking video profile", err)
 			return

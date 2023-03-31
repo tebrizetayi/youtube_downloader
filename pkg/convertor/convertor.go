@@ -23,11 +23,23 @@ func (c *Client) ConvertMp4ToMp3(ctx context.Context, fileName string, outputFil
 
 	log.Println("Converting file to mp3", fileName)
 
+	mp4File := fmt.Sprintf("%s.mp4", fileName)
 	mp3File := fmt.Sprintf("%s.mp3", outputFilename)
-	cmd := exec.Command("ffmpeg", "-i", fileName+".mp4", "-vn", "-acodec", "libmp3lame", "-ac", "2",
+	cmd := exec.CommandContext(ctx, "ffmpeg", "-i", mp4File, "-vn", "-acodec", "libmp3lame", "-ac", "2",
 		"-ab", "256k", "-ar", "44100", mp3File)
-	err := cmd.Run()
 
+	err := cmd.Start()
+	if err != nil {
+		return nil, err
+	}
+
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+	}
+
+	err = cmd.Wait()
 	if err != nil {
 		return nil, err
 	}
@@ -39,5 +51,4 @@ func (c *Client) ConvertMp4ToMp3(ctx context.Context, fileName string, outputFil
 
 	log.Println("Converted file to mp3", mp3File)
 	return mp3Bytes, nil
-
 }

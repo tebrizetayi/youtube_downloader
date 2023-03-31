@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 	"testing"
-	"youtube_download/convertor"
-	"youtube_download/downloader"
+	"youtube_download/pkg/convertor"
+	"youtube_download/pkg/downloader"
 )
 
 func TestMp3Downloader_Success(t *testing.T) {

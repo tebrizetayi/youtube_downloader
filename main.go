@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"syscall"
 	"youtube_download/api"
-	"youtube_download/convertor"
-	"youtube_download/downloader"
-	"youtube_download/mp3downloader"
-	"youtube_download/youtubevideoprofiler"
+	"youtube_download/pkg/convertor"
+	"youtube_download/pkg/downloader"
+	"youtube_download/pkg/mp3downloader"
+	"youtube_download/pkg/youtubevideoprofiler"
 )
 
 func main() {
@@ -35,8 +35,8 @@ func main() {
 	downloader := downloader.NewDownloader()
 	convertor := convertor.NewConverter()
 	mp3downloader := mp3downloader.NewMp3downloader(&downloader, &convertor)
-	youtubevideoprofiler := youtubevideoprofiler.NewYoutubevideoprofiler()
-	controller := api.NewYoutubeController(&mp3downloader, &youtubevideoprofiler)
+	youtubevideoprofiler := youtubevideoprofiler.NewVideoProfiler()
+	controller := api.NewYoutubeController(&mp3downloader, youtubevideoprofiler)
 
 	// Start the HTTP service listening for requests.
 	api := http.Server{
