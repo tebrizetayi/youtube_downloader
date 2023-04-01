@@ -60,8 +60,8 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	select {
 	case result = <-resultChan:
 		if result.Err != nil {
+			log.Println("Connection is errrorrr")
 			http.Error(w, err.Error(), http.StatusNotFound)
-
 			return
 		}
 	case <-ctx.Done():

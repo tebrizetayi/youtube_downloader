@@ -3,7 +3,7 @@ FROM golang:latest
 
 # Set the working directory to /go/src/app
 WORKDIR /go/src/app
-RUN apt-get --fix-missing update && apt-get install -y ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
 RUN go install github.com/iawia002/lux@latest
 
 # Copy the current directory contents into the container at /go/src/app
