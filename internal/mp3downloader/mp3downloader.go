@@ -2,8 +2,8 @@ package mp3downloader
 
 import (
 	"context"
-	"youtube_download/pkg/convertor"
-	"youtube_download/pkg/downloader"
+	"youtube_download/internal/convertor"
+	"youtube_download/internal/downloader"
 )
 
 type Mp3downloader interface {

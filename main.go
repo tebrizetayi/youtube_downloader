@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"syscall"
 	"youtube_download/api"
-	"youtube_download/pkg/convertor"
-	"youtube_download/pkg/downloader"
-	"youtube_download/pkg/mp3downloader"
-	"youtube_download/pkg/youtubevideoprofiler"
+	"youtube_download/internal/convertor"
+	"youtube_download/internal/downloader"
+	"youtube_download/internal/mp3downloader"
+	"youtube_download/internal/youtubevideoprofiler"
 )
 
 func main() {

@@ -8,8 +8,8 @@ import (
 
 	"net/http"
 	"time"
-	"youtube_download/pkg/mp3downloader"
-	"youtube_download/pkg/youtubevideoprofiler"
+	"youtube_download/internal/mp3downloader"
+	"youtube_download/internal/youtubevideoprofiler"
 )
 
 type YoutubeConvertorController struct {
