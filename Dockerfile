@@ -12,8 +12,8 @@ COPY . /go/src/app
 # Download any needed dependencies specified in go.mod
 RUN go mod download
 
-#
-#RUN go test ./... -v
+
+RUN go test ./... -v
 # Build the application
 
 RUN go build -o main .
