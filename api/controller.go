@@ -85,6 +85,7 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 		return
 	}
 
+	log.Println("Download begin")
 	resultChan := make(chan convertMp3Result)
 
 	downloadCtx, downloadCancel := context.WithTimeout(context.Background(), 30*time.Minute)

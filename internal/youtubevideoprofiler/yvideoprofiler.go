@@ -3,6 +3,7 @@ package youtubevideoprofiler
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/kkdai/youtube/v2"
@@ -41,7 +42,8 @@ func (c *ProfilerClient) CheckVideoDuration(ctx context.Context, videoID string,
 	if err != nil {
 		return false, err
 	}
-
+	fmt.Println(video.Duration)
+	log.Println(video.Duration.Seconds())
 	if video.Duration.Seconds() > maxDuration {
 		return false, nil
 	}
