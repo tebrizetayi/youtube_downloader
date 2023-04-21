@@ -1,8 +1,9 @@
 module youtube_download
 
-go 1.20
+go 1.18
 
 require (
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/kkdai/youtube/v2 v2.7.18
 )

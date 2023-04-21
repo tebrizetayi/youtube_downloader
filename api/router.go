@@ -18,5 +18,7 @@ func NewAPI(y YoutubeConvertorController) http.Handler {
 	router.HandleFunc("/download", y.DownloadMp3)
 	router.HandleFunc("/info", y.Info)
 	router.HandleFunc("/", y.ServeIndex)
+	router.HandleFunc("/progress", y.ProgressHandler)
+	router.HandleFunc("/downloadFile", y.DownloadResultHandler)
 	return router
 }

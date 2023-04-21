@@ -2,6 +2,7 @@ package mp3downloader
 
 import (
 	"context"
+	"log"
 	"youtube_download/internal/convertor"
 	"youtube_download/internal/downloader"
 )
@@ -24,6 +25,7 @@ func NewMp3downloader(d downloader.Downloader, c convertor.Converter) Client {
 
 func (c *Client) DownloadMp3(ctx context.Context, url string) ([]byte, string, error) {
 
+	log.Println("BEGIN")
 	fileName, err := c.Downloader.Download(ctx, url)
 	if err != nil {
 		return nil, "", err
@@ -34,5 +36,6 @@ func (c *Client) DownloadMp3(ctx context.Context, url string) ([]byte, string, e
 		return nil, "", err
 	}
 
+	log.Println("ENDED")
 	return mp3Bytes, fileName + ".mp3", nil
 }

@@ -145,7 +145,6 @@
       </div>
     </div>
   </div>
-
   <script>
     const form = document.getElementById('download-form');
     const resultDiv = document.getElementById('result');
@@ -154,31 +153,30 @@
     const videoDetailsDuration = document.getElementById('video-duration');
     const videoDetailsTitle = document.getElementById('video-title');
     const videoDetailstable = document.getElementById('video-details-table');
-
+  
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const urlInput = document.getElementById('url-input');
       const url = urlInput.value.trim();
       spinner.style.display = 'none';
-
-      resultDiv.innerHTML = ""
-      videoDetailstable.innerHTML = ""
+  
+      resultDiv.innerHTML = "";
+      videoDetailstable.innerHTML = "";
       videoDetailsDiv.style.display = 'none';
-
+  
       if (!url) {
         resultDiv.innerHTML = '<p>Please enter a valid YouTube URL.</p>';
         return;
       }
-
+  
       // Show the loading spinner
       spinner.style.display = 'flex';
-
-
+  
       const videoDetailsResponse = await fetch('/info?url=' + encodeURIComponent(url));
       const videoDetails = await videoDetailsResponse.json();
       const videoTitle = videoDetails.title;
       const duration = videoDetails.duration;
-
+  
       videoDetailsDiv.style.display = 'flex';
       const newRow = document.createElement('tr');
       newRow.innerHTML = `
@@ -186,31 +184,42 @@
       <td>${duration}</td>
     `;
       videoDetailstable.appendChild(newRow);
-
-
-      // Use a backend API to download the MP3 file and return the download link
-      const response = await fetch('/download?url=' + encodeURIComponent(url));
+  
+      // Request the download and get the download token
+      const tokenResponse = await fetch('/download?url=' + encodeURIComponent(url));
+      const tokenData = await tokenResponse.json();
+      const downloadToken = tokenData.token;
+  
+      // Poll the backend for download completion
+      const checkDownload = async () => {
+        const downloadResponse = await fetch('/progress?token=' + encodeURIComponent(downloadToken));
+        if (downloadResponse.status === 202) {
+          setTimeout(checkDownload, 5000); // Poll every 5 seconds
+        } else if (downloadResponse.status === 200) {
+          // Download the file when the progress is 100%
+          const fileResponse = await fetch('/downloadFile?token=' + encodeURIComponent(downloadToken));
+          spinner.style.display = 'none';
+          if (fileResponse.ok) {
+            const blob = await fileResponse.blob();
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = videoTitle + ".mp3"
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            resultDiv.innerHTML = '<p>Download is completed</p>';
+          } else {
+            const errorMessage = await fileResponse.text();
+            resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
+          }
+        }
+      };
+  
       resultDiv.innerHTML = '<p>Downloading ...</p>';
-
-      // Hide the loading spinner
-      spinner.style.display = 'none';
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
-        return;
-      }
-
-      const blob = await response.blob();
-      const downloadLink = document.createElement('a');
-      downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.download = url + ".mp3"
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      resultDiv.innerHTML = '<p>Download is completed</p>';
+      checkDownload();
     });
-
   </script>
+  
 
   <!-- Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" crossorigin="anonymous"
