@@ -79,9 +79,9 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	}
 
 	// Check if the video is longer than 10 minutes
-	isValid, _ := c.YVideoprofiler.CheckVideoDuration(ctx, url, 3600)
+	isValid, _ := c.YVideoprofiler.CheckVideoDuration(ctx, url, 144000)
 	if !isValid {
-		http.Error(w, "Video is longer than 60 minutes", http.StatusBadRequest)
+		http.Error(w, "Video is longer than 180 minutes", http.StatusBadRequest)
 		return
 	}
 
