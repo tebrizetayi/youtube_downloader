@@ -190,11 +190,12 @@
       if (tokenResponse.ok) {
         const tokenData = await tokenResponse.json();
         const downloadToken = tokenData.token;
+        const health_check_period=tokenData.health_check_period;
         // Poll the backend for download completion
         const checkDownload = async () => {
           const downloadResponse = await fetch('/progress?token=' + encodeURIComponent(downloadToken));
           if (downloadResponse.status === 202) {
-            setTimeout(checkDownload, 5000); // Poll every 5 seconds
+            setTimeout(checkDownload, health_check_period); // Poll every 5 seconds
           } else if (downloadResponse.status === 200) {
             // Download the file when the progress is 100%
             const fileResponse = await fetch('/downloadFile?token=' + encodeURIComponent(downloadToken));
