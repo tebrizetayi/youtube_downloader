@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"sync"
 
 	"net/http"
 	"time"
@@ -15,7 +14,8 @@ import (
 
 type YoutubeConvertorController struct {
 	mp3downloader.Mp3downloader
-	YVideoprofiler youtubevideoprofiler.ProfilerClient
+	YVideoprofiler  youtubevideoprofiler.ProfilerClient
+	downloadManager *DownloadManager
 }
 
 func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader,
@@ -23,39 +23,9 @@ func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader,
 ) YoutubeConvertorController {
 	return YoutubeConvertorController{
 		mp3Downloader,
-		youtubevideoprofiler}
-
-}
-
-// DownloadProgress struct for progress tracking
-type DownloadProgress struct {
-	sync.Mutex
-	progress  bool
-	lastCheck time.Time
-	context.CancelFunc
-}
-
-// Store the download progress and result in a map
-var downloadProgress = make(map[string]*DownloadProgress)
-var downloadResults = make(map[string][]byte)
-
-func (dp *DownloadProgress) SetProgress(progress bool) {
-	dp.Lock()
-	defer dp.Unlock()
-	dp.progress = progress
-}
-
-func (dp *DownloadProgress) GetProgress() bool {
-	dp.Lock()
-	defer dp.Unlock()
-	dp.lastCheck = time.Now()
-	return dp.progress
-}
-
-func (dp *DownloadProgress) GetLastCheck() time.Time {
-	dp.Lock()
-	defer dp.Unlock()
-	return dp.lastCheck
+		youtubevideoprofiler,
+		NewDownloadManager(),
+	}
 }
 
 // DownloadMp3
@@ -73,8 +43,10 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 
 	// Generate a unique download token
 	downloadToken := url
-	progress := &DownloadProgress{}
-	downloadProgress[downloadToken] = progress
+	c.downloadManager.progress[downloadToken] = &DownloadProgress{
+		isDownloadCompleted: true,
+		lastCheck:           time.Now(),
+	}
 
 	// Check if the video is exists and public
 	if IsAvailable, err := c.YVideoprofiler.IsVideoAvailable(ctx, url); err != nil || !IsAvailable {
@@ -103,19 +75,19 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	resultChan := make(chan convertMp3Result)
 
 	downloadCtx, downloadCancel := context.WithTimeout(context.Background(), 30*time.Minute)
-	downloadResults[downloadToken] = []byte{}
-	downloadProgress[downloadToken] = &DownloadProgress{
-		progress:   false,
-		lastCheck:  time.Now(),
-		CancelFunc: downloadCancel,
+	c.downloadManager.progress[downloadToken] = &DownloadProgress{
+		isDownloadCompleted: false,
+		lastCheck:           time.Now(),
+		CancelFunc:          downloadCancel,
+		result:              []byte{},
 	}
 
 	go func() {
 		resultChan = c.ConvertMp3Async(downloadCtx, url, downloadToken)
 		result := <-resultChan
-		downloadResults[downloadToken] = result.Result
-		if downloadProgressToken, ok := downloadProgress[downloadToken]; ok {
-			downloadProgressToken.SetProgress(true)
+		c.downloadManager.SetResult(downloadToken, result.Result)
+		if downloadProgressToken, ok := c.downloadManager.progress[downloadToken]; ok {
+			downloadProgressToken.isDownloadCompleted = true
 		} else {
 			log.Println("Download progress could not be found....")
 		}
@@ -141,10 +113,9 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 // ProgressHandler to get the download progress
 func (c *YoutubeConvertorController) ProgressHandler(w http.ResponseWriter, r *http.Request) {
 	token := r.URL.Query().Get("token")
-	if progress, ok := downloadProgress[token]; ok {
-		currentProgress := progress.GetProgress()
+	if isDownloadCompleted, err := c.downloadManager.GetProgress(token); err == nil {
 		w.Header().Set("Content-Type", "text/plain")
-		if !currentProgress {
+		if !isDownloadCompleted {
 			w.WriteHeader(http.StatusAccepted) // Set status code to 202 when the download is still in progress
 		} else {
 			w.WriteHeader(http.StatusOK)
@@ -158,7 +129,7 @@ func (c *YoutubeConvertorController) ProgressHandler(w http.ResponseWriter, r *h
 func (c *YoutubeConvertorController) DownloadResultHandler(w http.ResponseWriter, r *http.Request) {
 	token := r.URL.Query().Get("token")
 	log.Println("Token from donwload", token)
-	if result, ok := downloadResults[token]; ok {
+	if result, err := c.downloadManager.GetResult(token); err == nil {
 		// Set the response header to indicate the file download
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Disposition", "attachment; filename="+fmt.Sprintf("%s.mp3", time.Now().String()))
@@ -241,9 +212,14 @@ func (c *YoutubeConvertorController) waitForResult(ctx context.Context, result c
 		case res := <-result:
 			return c.createResultChannel(res)
 		case <-time.After(1 * time.Second):
-			if time.Since(downloadProgress[token].GetLastCheck()) > 6*time.Second {
-				downloadProgress[token].CancelFunc() // Cancel the download if no progress check within the timeout duration
-				return nil
+			if lastCheck, err := c.downloadManager.GetLastCheck(token); err == nil {
+				if time.Since(lastCheck) > 6*time.Second {
+					err := c.downloadManager.CancelDownload(token)
+					if err != nil {
+						log.Println("Error in cancel download", err)
+					}
+					return nil
+				}
 			}
 			time.Sleep(500 * time.Millisecond) // Add a sleep to prevent high CPU usage
 		}
