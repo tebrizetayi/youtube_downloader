@@ -84,6 +84,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon_96.png">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -95,7 +97,7 @@
           <form class="d-flex" id="download-form">
             <input class="form-control me-2" type="search" placeholder="Enter YouTube video URL" aria-label="Search"
               id="url-input">
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" type="submit" id="convert-btn">
               <span id="convert-text">Convert</span>
             </button>
           </form>
@@ -146,6 +148,8 @@
     </div>
   </div>
   <script>
+
+
     const form = document.getElementById('download-form');
     const resultDiv = document.getElementById('result');
     const spinner = document.getElementsByClassName('spinner')[0];
@@ -155,7 +159,9 @@
     const videoDetailstable = document.getElementById('video-details-table');
 
     form.addEventListener('submit', async (event) => {
+      console.log("begin")
       event.preventDefault();
+
       const urlInput = document.getElementById('url-input');
       const url = urlInput.value.trim();
       spinner.style.display = 'none';
@@ -190,7 +196,7 @@
       if (tokenResponse.ok) {
         const tokenData = await tokenResponse.json();
         const downloadToken = tokenData.token;
-        const health_check_period=tokenData.health_check_period;
+        const health_check_period = tokenData.health_check_period;
         // Poll the backend for download completion
         const checkDownload = async () => {
           const downloadResponse = await fetch('/progress?token=' + encodeURIComponent(downloadToken));
@@ -224,6 +230,22 @@
         resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
       }
     });
+
+    // Read the URL query string
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    // Define an async function for form submission
+    async function submitForm() {
+      const event = new Event('submit');
+      await form.dispatchEvent(event);
+    }
+
+    // Check if the watch?v= parameter exists
+    if (urlParams.has('v')) {
+      document.getElementById('url-input').value = 'https://www.youtube.com/watch?v=' + urlParams.get('v');
+      submitForm();
+    }
   </script>
 
 

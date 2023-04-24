@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"net/http"
+	"net/url"
 	"time"
 	"youtube_download/internal/mp3downloader"
 	"youtube_download/internal/youtubevideoprofiler"
@@ -30,6 +31,7 @@ func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader,
 
 // DownloadMp3
 func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.Request) {
+	log.Println("Download mp3 request received")
 	// Open the file to be downloaded
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
@@ -239,4 +241,129 @@ func (c *YoutubeConvertorController) createResultChannel(res convertMp3Result) c
 	resChan <- res
 	close(resChan)
 	return resChan
+}
+
+func (c *YoutubeConvertorController) RedirectHandler(w http.ResponseWriter, r *http.Request) {
+	// Open the file to be downloaded
+	ctx, cancel := context.WithCancel(r.Context())
+	defer cancel()
+
+	// Extract watch?v= parameter from the URL
+	videoParam := r.URL.Query().Get("v")
+	if videoParam != "" {
+		r.PostForm = url.Values{}
+		r.PostForm.Set("url", fmt.Sprintf("https://www.youtube.com/watch?v=%s", videoParam))
+	}
+
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Error parsing form data", http.StatusBadRequest)
+		return
+	}
+	url := r.FormValue("url")
+	log.Println("Downloading:", url)
+
+	// Generate a unique download token
+	downloadToken := url
+	c.downloadManager.progress[downloadToken] = &DownloadProgress{
+		isDownloadCompleted: true,
+		lastCheck:           time.Now(),
+	}
+
+	// Check if the video is exists and public
+	if IsAvailable, err := c.YVideoprofiler.IsVideoAvailable(ctx, url); err != nil || !IsAvailable {
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if !IsAvailable {
+			http.Error(w, "Video is not available", http.StatusBadRequest)
+			return
+		}
+	}
+
+	// Check if the video is longer than 180 minutes
+	if isValid, err := c.YVideoprofiler.CheckVideoDuration(ctx, url, 144000); err != nil || !isValid {
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if !isValid {
+			http.Error(w, "Video is longer than 180 minutes", http.StatusBadRequest)
+			return
+		}
+	}
+
+	resultChan := make(chan convertMp3Result)
+
+	downloadCtx, downloadCancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	c.downloadManager.progress[downloadToken] = &DownloadProgress{
+		isDownloadCompleted: false,
+		lastCheck:           time.Now(),
+		CancelFunc:          downloadCancel,
+		result:              []byte{},
+	}
+
+	go func() {
+		resultChan = c.ConvertMp3Async(downloadCtx, url, downloadToken)
+		result := <-resultChan
+		c.downloadManager.SetResult(downloadToken, result.Result)
+		if downloadProgressToken, ok := c.downloadManager.progress[downloadToken]; ok {
+			downloadProgressToken.isDownloadCompleted = true
+		} else {
+			log.Println("Download progress could not be found....")
+		}
+	}()
+
+	w.WriteHeader(http.StatusAccepted)
+	response := struct {
+		Token             string `json:"token"`
+		HealthCheckPeriod int    `json:"health_check_period"`
+	}{
+		Token:             downloadToken,
+		HealthCheckPeriod: 5000,
+	}
+	jsonData, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, "Error generating download token", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
+
+}
+
+// DownloadMp3
+func (c *YoutubeConvertorController) WatchHandler(w http.ResponseWriter, r *http.Request) {
+	// Open the file to be downloaded
+
+	// Extract watch?v= parameter from the URL
+	videoParam := r.URL.Query().Get("v")
+	log.Println(videoParam)
+	if videoParam != "" {
+
+		r.PostForm = url.Values{}
+		r.PostForm.Set("url", videoParam)
+	}
+
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Error parsing form data", http.StatusBadRequest)
+		return
+	}
+	url := r.FormValue("url")
+
+	if url == "" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	log.Println("Downloading:", url)
+
+	// Generate a unique download token
+	// ...
+
+	// Rest of the handler code
+	// ...
+
+	// Replace JSON response with HTTP redirection
+	http.Redirect(w, r, fmt.Sprintf("?v=%s", url), http.StatusSeeOther)
 }
