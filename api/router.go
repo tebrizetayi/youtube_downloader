@@ -2,13 +2,14 @@ package api
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
 
 func NewAPI(y YoutubeConvertorController) http.Handler {
 	router := mux.NewRouter()
-
+	router.Use(redirectToWWW)
 	// Create a file server handler that serves static files from the "static" directory
 	fileServer := http.FileServer(http.Dir("static"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
@@ -21,4 +22,15 @@ func NewAPI(y YoutubeConvertorController) http.Handler {
 	router.HandleFunc("/downloadFile", y.DownloadResultHandler)
 	router.HandleFunc("/watch", y.WatchHandler)
 	return router
+}
+
+func redirectToWWW(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		host := r.Host
+		if !strings.HasPrefix(host, "www.") {
+			http.Redirect(w, r, "https://www."+host+r.URL.String(), http.StatusMovedPermanently)
+			return
+		}
+		handler.ServeHTTP(w, r)
+	})
 }
