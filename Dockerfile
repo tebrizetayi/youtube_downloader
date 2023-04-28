@@ -9,6 +9,7 @@ RUN go install github.com/iawia002/lux@latest
 # Copy the current directory contents into the container at /go/src/app
 COPY . /go/src/app
 
+
 # Download any needed dependencies specified in go.mod
 RUN go mod download
 

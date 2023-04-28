@@ -2,6 +2,8 @@ package api
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -44,10 +46,30 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	log.Println("Downloading:", url)
 
 	// Generate a unique download token
-	downloadToken := url
-	c.downloadManager.progress[downloadToken] = &DownloadProgress{
-		isDownloadCompleted: true,
-		lastCheck:           time.Now(),
+	downloadToken := c.GenerateHash(url)
+
+	if v, ok := c.downloadManager.progress[downloadToken]; !ok || !v.isDownloadCompleted {
+		c.downloadManager.progress[downloadToken] = &DownloadProgress{
+			isDownloadCompleted: true,
+			lastCheck:           time.Now(),
+		}
+	} else {
+		w.WriteHeader(http.StatusAccepted)
+		response := struct {
+			Token             string `json:"token"`
+			HealthCheckPeriod int    `json:"health_check_period"`
+		}{
+			Token:             downloadToken,
+			HealthCheckPeriod: 5000,
+		}
+		jsonData, err := json.Marshal(response)
+		if err != nil {
+			http.Error(w, "Error generating download token", http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
+		return
 	}
 
 	// Check if the video is exists and public
@@ -358,12 +380,11 @@ func (c *YoutubeConvertorController) WatchHandler(w http.ResponseWriter, r *http
 
 	log.Println("Downloading:", url)
 
-	// Generate a unique download token
-	// ...
-
-	// Rest of the handler code
-	// ...
-
 	// Replace JSON response with HTTP redirection
 	http.Redirect(w, r, fmt.Sprintf("?v=%s", url), http.StatusSeeOther)
+}
+
+func (c YoutubeConvertorController) GenerateHash(str string) string {
+	hashSum := md5.Sum([]byte(str))
+	return hex.EncodeToString(hashSum[:])
 }

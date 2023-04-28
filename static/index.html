@@ -78,6 +78,10 @@
         transform: rotate(360deg);
       }
     }*/
+
+    #download-btn {
+      display: none;
+    }
   </style>
 
 
@@ -104,6 +108,7 @@
         </div>
         <div class="col-md-8 offset-md-2 mt-4">
           <div class="spinner center-div" style="display: none;">
+
             <div class="spinner-border text-primary" role="status">
               <span class="sr-only"></span>
             </div>
@@ -126,7 +131,11 @@
               <span class="sr-only"></span>
             </div>
           </div>
-
+          <div class="center-div">
+            <button class="btn btn-primary" type="submit" id="download-btn">
+              <span id="download-text">Download</span>
+            </button>
+          </div>
           <div class="row mt-5" id="video-details" style="display: none;">
             <div class="col-md-12">
               <table class="table table-bordered">
@@ -157,6 +166,7 @@
     const videoDetailsDuration = document.getElementById('video-duration');
     const videoDetailsTitle = document.getElementById('video-title');
     const videoDetailstable = document.getElementById('video-details-table');
+    const downloadButton = document.getElementById('download-btn');
 
     form.addEventListener('submit', async (event) => {
       console.log("begin")
@@ -165,6 +175,7 @@
       const urlInput = document.getElementById('url-input');
       const url = urlInput.value.trim();
       spinner.style.display = 'none';
+      downloadButton.style.display='none';
 
       resultDiv.innerHTML = "";
       videoDetailstable.innerHTML = "";
@@ -210,11 +221,22 @@
               const blob = await fileResponse.blob();
               const downloadLink = document.createElement('a');
               downloadLink.href = URL.createObjectURL(blob);
-              downloadLink.download = videoTitle + ".mp3"
-              document.body.appendChild(downloadLink);
-              downloadLink.click();
-              document.body.removeChild(downloadLink);
-              resultDiv.innerHTML = '<p>Download is completed</p>';
+              downloadLink.download = '/downloadFile?token=' + encodeURIComponent(downloadToken);
+
+              // Show the download button
+              const downloadButton = document.getElementById('download-btn');
+              downloadButton.style.display = 'inline-block';
+              downloadButton.onclick = () => {
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                resultDiv.innerHTML = '<p>Download is completed</p>';
+              };
+
+              // Hide the spinner
+              spinner.style.display = 'none';
+              resultDiv.innerHTML = '<p>Download is ready:</p>';
+
             } else {
               const errorMessage = await fileResponse.text();
               resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
@@ -229,7 +251,10 @@
         spinner.style.display = 'none';
         resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
       }
-    });
+
+            // ... (rest of the JavaScript code)
+
+          });
 
     // Read the URL query string
     const queryString = window.location.search;
