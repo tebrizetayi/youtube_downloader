@@ -1,19 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>m3youtube - YouTube to MP3 Converter</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- Custom CSS -->
+  <!-- Bootstrap CSS - Updated to Bootstrap 5 for consistency with your old HTML -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" crossorigin="anonymous">
   <style>
+    /* Style adjustments for consistency with your previous design */
     body {
-      background-color: #f9f9f9;
-      margin-top: 100px;
+      background-color: #f8f9fa;
+      color: #333;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .navbar {
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-brand, .nav-link, .main-header h1, .terms a, .content-section h2, .step h4 {
+      color: #ff3300;
+    }
+
+    /* Additional styles based on your old HTML for feedback elements */
+    .spinner {
+      display: none; /* Hidden by default, shown during loading */
+    }
+
+    h1{
+        font-size: 28px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    color: #222;
     }
 
     .form-control {
@@ -26,139 +46,279 @@
       background-color: #fff;
     }
 
-    .btn-primary {
-      border-color: #ff3300;
-      background-color: #ff3300;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 400;
-      padding: 12px 20px;
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
 
-    .btn-primary:hover {
-      border-color: #ff3300;
-      background-color: #ff4d4d;
-      color: #fff;
+    .navbar {
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .center-div {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .navbar-brand {
+      color: #ff3300;
+      font-weight: bold;
+      font-size: 24px;
     }
 
-    h1 {
-      font-size: 28px;
-      font-weight: 600;
-      margin-top: 20px;
+    .nav-link {
+      color: #555;
+    }
+
+    .main-header {
+      text-align: center;
+      padding: 40px 15px;
+    }
+
+    .main-header h1 {
+      color:rgb(12 2 47 / var(--tw-text-opacity));
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .main-header p {
+      color: #666;
+      font-size: 24px;
       margin-bottom: 30px;
-      color: #222;
     }
 
-    .btn-primary:focus,
-    .btn-primary:active,
-    .btn-primary.active,
-    .open .dropdown-toggle.btn-primary {
-      background-color: red !important;
-      border-color: red !important;
+    .search-box {
+      /*max-width: 600px;*/
+      margin: auto;
     }
 
-    /*.spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid #ccc;
-      border-top-color: #666;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      display: none;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+    /*.search-box .form-control {
+      border: 2px solid #ff3300;
     }*/
+
+    .search-box button {
+      background-color: #ff3300;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+    }
+
+    .terms {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+    }
+
+    .terms a {
+      color: #d8232a;
+    }
+
+    .content-section {
+      text-align: center;
+      padding: 40px 15px;
+    }
+
+    .content-section h2 {
+      color: rgb(12 2 47 / var(--tw-text-opacity));
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+
+    .content-section .timestamp {
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    .content-section p {
+      color: #555;
+    }
+
+    .how-to {
+      background-color: #fff;
+      padding: 40px;
+      margin-top: 30px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .step {
+      text-align: left;
+      padding: 20px;
+    }
+
+    .step h4 {
+      color: #d8232a;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .step p {
+      color: #555;
+    }
+
+    .step-number {
+      height: 50px;
+      width: 50px;
+      background-color: #ff3300;
+      color: white;
+      border-radius: 50%;
+      display: inline-block;
+      line-height: 50px;
+      margin-right: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .step-number-2 {
+      height: 50px;
+      width: 50px;
+      background-color: green;
+      color: white;
+      border-radius: 50%;
+      display: inline-block;
+      line-height: 50px;
+      margin-right: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
 
     #download-btn {
       display: none;
     }
   </style>
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon_96.png">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
 </head>
-
 <body>
-  <div class="center-div">
+  <!-- Navigation bar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
-      <div class="row">
-        <div class="col-md-8 offset-md-2">
-          <h1>Convert YouTube Videos to MP3</h1>
-          <form class="d-flex" id="download-form">
-            <input class="form-control me-2" type="search" placeholder="Enter YouTube video URL" aria-label="Search"
-              id="url-input">
-            <button class="btn btn-primary" type="submit" id="convert-btn">
-              <span id="convert-text">Convert</span>
-            </button>
-          </form>
+      <a class="navbar-brand" href="#">MP3YOUTUBE</a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">YouTube Downloader</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Copyright</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Language
+          </a>
+          <div class="dropdown-menu" aria-labelledby="languageDropdown">
+            <a class="dropdown-item" href="#">English</a>
+            <a class="dropdown-item" href="#">Spanish</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main header -->
+  <header class="main-header">
+    <div class="container">
+      <h1>YOUTUBE TO MP3 CONVERTER</h1>
+      <p>Convert and download YouTube videos to MP3</p>
+      <form id="download-form">
+        <div class="search-box row">
+          <div class="col-10">
+            <input class="form-control me-2" type="search" placeholder="Enter YouTube video URL" aria-label="Search" id="url-input">
+          </div>
+          <div class="col-2">
+            <button class="btn btn-primary" type="submit" id="convert-btn">Convert</button>
+          </div>
         </div>
-        <div class="col-md-8 offset-md-2 mt-4">
-          <div class="spinner center-div" style="display: none;">
+      </form>
+      <div class="terms">By using our service you accept our <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a></div>
+    </div>
+  </header>
+  <div class="container">
+    <div class="col-md-8 offset-md-2 mt-4">
+      <div class="spinner center-div" style="display: none;">
 
-            <div class="spinner-border text-primary" role="status">
-              <span class="sr-only"></span>
-            </div>
-            <div class="spinner-border text-secondary" role="status">
-              <span class="sr-only"></span>
-            </div>
-            <div class="spinner-border text-success" role="status">
-              <span class="sr-only"></span>
-            </div>
-            <div class="spinner-border text-danger" role="status">
-              <span class="sr-only"></span>
-            </div>
-            <div class="spinner-border text-warning" role="status">
-              <span class="sr-only"></span>
-            </div>
-            <div class="spinner-border text-info" role="status">
-              <span class="sr-only"></span>
-            </div>
-            <div class="spinner-border text-dark" role="status">
-              <span class="sr-only"></span>
-            </div>
-          </div>
-          <div class="center-div">
-            <button class="btn btn-primary" type="submit" id="download-btn">
-              <span id="download-text">Download</span>
-            </button>
-          </div>
-          <div class="row mt-5" id="video-details" style="display: none;">
-            <div class="col-md-12">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>Video Title</th>
-                    <th>Duration</th>
-                  </tr>
-                </thead>
-                <tbody id="video-details-table">
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only"></span>
+        </div>
+        <div class="spinner-border text-secondary" role="status">
+          <span class="sr-only"></span>
+        </div>
+        <div class="spinner-border text-success" role="status">
+          <span class="sr-only"></span>
+        </div>
+        <div class="spinner-border text-danger" role="status">
+          <span class="sr-only"></span>
+        </div>
+        <div class="spinner-border text-warning" role="status">
+          <span class="sr-only"></span>
+        </div>
+        <div class="spinner-border text-info" role="status">
+          <span class="sr-only"></span>
+        </div>
+        <div class="spinner-border text-dark" role="status">
+          <span class="sr-only"></span>
+        </div>
+      </div>
+      <div class="center-div">
+        <button class="btn btn-primary" type="submit" id="download-btn">
+          <span id="download-text">Download</span>
+        </button>
+      </div>
+      <div class="row mt-5" id="video-details" style="display: none;">
+        <div class="col-md-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Video Title</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+            <tbody id="video-details-table">
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-          <div id="result"></div>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container">
+      <h2>BEST YOUTUBE TO MP3 CONVERTER</h2>
+      <p>MP3YouTube is the best YouTube to MP3 converter and downloader. It's one of the fastest tool for converting YouTube videos to music. It's really easy to use with its super user-friendly interface and is very convenient. The high-quality mp3 music files are accessible by the user within the matter of seconds thanks to the fast conversion speed. You don't even need to download any software or need any account to use our service. Enjoy unlimited conversion of music from YouTube in the best available quality. We will be adding many more formats in the future so stay tuned for that. Try us once and we guarantee you'll be delighted with the quality of our service. MP3YouTube is free now and will always be</p>
+
+      <div class="how-to">
+        <div class="row">
+          <div class="col-md-4 step">
+            <span class="step-number">1</span>
+            <h4>Start</h4>
+            <p>Paste YouTube url or enter keywords into the search box.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number-2">2</span>
+            <h4>Convert</h4>
+            <p>Click on the Convert button to start the process.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number">3</span>
+            <h4>Download</h4>
+            <p>Wait a moment for the link to be processed, and then download.</p>
+          </div>
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- Spinner for loading feedback -->
+  <div class="spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
   </div>
+
+
+  <!-- Adjusted to use the Bootstrap 5 and ensure JavaScript functionality -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
   <script>
-
-
     const form = document.getElementById('download-form');
     const resultDiv = document.getElementById('result');
     const spinner = document.getElementsByClassName('spinner')[0];
@@ -272,11 +432,5 @@
       submitForm();
     }
   </script>
-
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" crossorigin="anonymous"
-    referrerpolicy="no-referrer"></script>
 </body>
-
 </html>
