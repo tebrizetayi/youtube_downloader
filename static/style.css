@@ -1,0 +1,177 @@
+
+body {
+  background-color: #f8f9fa;
+  color: #333;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand, .nav-link, .main-header h1, .terms a, .content-section h2, .step h4 {
+  color: #ff3300;
+}
+
+/* Additional styles based on your old HTML for feedback elements */
+.spinner {
+  display: none; /* Hidden by default, shown during loading */
+}
+
+h1{
+    font-size: 28px;
+font-weight: 600;
+margin-top: 20px;
+margin-bottom: 30px;
+color: #222;
+}
+
+.form-control {
+  border-color: #cfcfcf;
+  height: 50px;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 12px 20px;
+  color: #222;
+  background-color: #fff;
+}
+
+body {
+  background-color: #f8f9fa;
+  color: #333;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  color: #ff3300;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.nav-link {
+  color: #555;
+}
+
+.main-header {
+  text-align: center;
+  padding: 40px 15px;
+}
+
+.main-header h1 {
+  color:rgb(12 2 47 / var(--tw-text-opacity));
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.main-header p {
+  color: #666;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.search-box {
+  /*max-width: 600px;*/
+  margin: auto;
+}
+
+/*.search-box .form-control {
+  border: 2px solid #ff3300;
+}*/
+
+.search-box button {
+  background-color: #ff3300;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+}
+
+.terms {
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.terms a {
+  color: #d8232a;
+}
+
+.content-section {
+  text-align: center;
+  padding: 40px 15px;
+}
+
+.content-section h2 {
+  color: rgb(12 2 47 / var(--tw-text-opacity));
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.content-section .timestamp {
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.content-section p {
+  color: #555;
+}
+
+.how-to {
+  background-color: #fff;
+  padding: 40px;
+  margin-top: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.step {
+  text-align: left;
+  padding: 20px;
+}
+
+.step h4 {
+  color: #d8232a;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.step p {
+  color: #555;
+}
+
+.step-number {
+  height: 50px;
+  width: 50px;
+  background-color: #ff3300;
+  color: white;
+  border-radius: 50%;
+  display: inline-block;
+  line-height: 50px;
+  margin-right: 10px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.step-number-2 {
+  height: 50px;
+  width: 50px;
+  background-color: green;
+  color: white;
+  border-radius: 50%;
+  display: inline-block;
+  line-height: 50px;
+  margin-right: 10px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#download-btn {
+  display: none;
+}
