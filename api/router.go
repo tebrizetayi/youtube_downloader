@@ -22,6 +22,10 @@ func NewAPI(y YoutubeConvertorController) http.Handler {
 	router.HandleFunc("/downloadFile", y.DownloadResultHandler)
 	router.HandleFunc("/watch", y.WatchHandler)
 
+	router.Path("/robots.txt").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/robots.txt")
+	})
+
 	return router
 }
 
