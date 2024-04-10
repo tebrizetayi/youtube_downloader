@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>m3youtube - Convertidor de YouTube a MP3</title>
+  <!-- Bootstrap CSS: Actualizado a Bootstrap 5 para consistencia con tu antiguo HTML -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon_96.png">
+</head>
+
+<body>
+  <!-- Barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">MP3YOUTUBE</a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Descargador de YouTube</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Derechos de autor</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Idioma
+          </a>
+          <div class="dropdown-menu" aria-labelledby="languageDropdown">
+            <a class="dropdown-item" href="/en">Inglés</a>
+            <a class="dropdown-item" href="/es">Español</a>
+            <a class="dropdown-item" href="/de">Alemán</a>
+            <a class="dropdown-item" href="/fr">Francés</a>
+            <a class="dropdown-item" href="/ru">Ruso</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Encabezado principal -->
+  <header class="main-header">
+    <div class="container">
+      <h1>CONVERTIDOR DE YOUTUBE A MP3</h1>
+      <p>Convierte y descarga vídeos de YouTube a MP3</p>
+      <form id="download-form">
+        <div class="search-box row">
+          <div class="col-10">
+            <input class="form-control me-2" type="search" placeholder="Ingresa la URL del vídeo de YouTube" aria-label="Search"
+              id="url-input">
+          </div>
+          <div class="col-2">
+            <button class="btn btn-primary" type="submit" id="convert-btn">Convertir</button>
+          </div>
+        </div>
+      </form>
+      <div class="terms">Al utilizar nuestro servicio, aceptas nuestros <a href="#">Términos de Servicio</a> y <a href="#">Política de Privacidad</a></div>
+    </div>
+  </header>
+  <div class="container text-center">
+    <div class="justify-content-center align-items-center spinner" style="display: none;" id="spinner-container">
+
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-secondary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-success" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-danger" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-warning" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-info" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-dark" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
+    <div class="center-div">
+      <button class="btn btn-primary" type="submit" id="download-btn">
+        <span id="download-text">Descargar</span>
+      </button>
+    </div>
+    <div class="row mt-5" id="video-details" style="display: none;">
+      <div class="col-md-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Título del Vídeo</th>
+              <th>Duración</th>
+            </tr>
+          </thead>
+          <tbody id="video-details-table">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+
+  <!-- Sección de Contenido -->
+  <section class="content-section">
+    <div class="container">
+      <h2>MEJOR CONVERTIDOR DE YOUTUBE A MP3</h2>
+      <p>MP3YouTube es el mejor convertidor y descargador de YouTube a MP3. Es una de las herramientas más rápidas para convertir vídeos de YouTube a música. Es muy fácil de usar gracias a su interfaz súper amigable y es muy conveniente. Los archivos de música mp3 de alta calidad están disponibles para el usuario en cuestión de segundos gracias a la rápida velocidad de conversión. Ni siquiera necesitas descargar ningún software ni crear una cuenta para usar nuestro servicio. Disfruta de la conversión ilimitada de música de YouTube en la mejor calidad disponible. Estaremos añadiendo muchos más formatos en el futuro, así que mantente atento. Pruébanos una vez y garantizamos que quedarás encantado con la calidad de nuestro servicio. MP3YouTube es gratuito ahora y siempre lo será.</p>
+
+      <div class="how-to">
+        <div class="row">
+          <div class="col-md-4 step">
+            <span class="step-number">1</span>
+            <h4>Comienza</h4>
+            <p>Pega la URL de YouTube o ingresa palabras clave en el cuadro de búsqueda.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number-2">2</span>
+            <h4>Convierte</h4>
+            <p>Haz clic en el botón Convertir para iniciar el proceso.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number">3</span>
+            <h4>Descarga</h4>
+            <p>Espera un momento para que se procese el enlace y luego descarga.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-section">
+    <div class="container">
+      <div class="row feature-row">
+        <!-- Característica 1 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>RÁPIDO, GRATUITO Y FÁCIL DE USAR</h3>
+            <p>Usar nuestro descargador de YouTube es la forma rápida y fácil de descargar y guardar cualquier vídeo de YouTube en MP3 o MP4. Simplemente copia la URL de YouTube, pégala en el cuadro de búsqueda y haz clic en el botón Convertir. No se necesitan cuentas registradas.</p>
+          </div>
+        </div>
+        <!-- Característica 2 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>COMPATIBLE CON TODAS LAS PLATAFORMAS</h3>
+            <p>Compatible con todas las plataformas de dispositivos. Fácil de convertir vídeos de YouTube a archivos MP3 independientemente de si estás usando Windows, Mac o Linux, Android o iPhone.</p>
+          </div>
+        </div>
+        <!-- Característica 3 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>MUCHOS FORMATOS PRÓXIMAMENTE</h3>
+            <p>Actualmente admitimos el formato de YouTube a MP3, pero no te preocupes porque tendremos muchos más formatos en el futuro. ¡Así que mantente al tanto!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row feature-row">
+        <!-- Característica 1 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>SIN LIMITACIONES</h3>
+            <p>Descarga y convierte vídeos de YouTube tanto como quieras, sin límites y siempre gratis.</p>
+          </div>
+        </div>
+        <!-- Característica 2 -->
+        <div class="col-md-4">
+          <div class="feature-card ">
+            <h3>100% SEGURO Y LIMPIO</h3>
+            <p>Con el creciente conocimiento sobre la seguridad de los dispositivos, las personas otorgan gran importancia a los datos personales. El servicio es totalmente limpio, sin virus y bajo una intensa supervisión basada en la base de datos de seguridad.</p>
+          </div>
+        </div>
+        <!-- Característica 3 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>SIEMPRE ACTUALIZADO</h3>
+            <p>Estamos trabajando las 24 horas para asegurarnos de estar actualizados con todos los cambios que YouTube trae mensualmente.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Preguntas Frecuentes -->
+<section class="faq-section">
+  <div class="container">
+    <h2>PREGUNTAS FRECUENTES</h2>
+    <dl class="faq-list">
+      <dt>P: ¿Hay algún límite en la cantidad de archivos descargados por usuario?</dt>
+      <dd>R: No. Nuestro sitio web permite a los usuarios convertir y descargar archivos ilimitados sin límites.</dd>
+      
+      <dt>P: ¿Hay cargos ocultos en MP3 YouTube?</dt>
+      <dd>R: No. Nuestro sitio web es absolutamente gratuito. Puedes convertir vídeos de YouTube a MP3.</dd>
+      
+      <dt>P: ¿Cuáles son los dispositivos compatibles para la conversión?</dt>
+      <dd>R: Ofrecemos el servicio que es compatible con todos los dispositivos de PC, smartphones y tablets.</dd>
+      
+      <dt>P: ¿Cómo descargar vídeos de YouTube en un teléfono móvil Android?</dt>
+      <dd>R: 
+        <ol>
+          <li>Accede a YouTube desde tu navegador o abre la aplicación de YouTube en tu dispositivo Android; después, copia la URL del vídeo que deseas descargar.</li>
+          <li>Pega la URL en el cuadro de búsqueda. También puedes ingresar palabras clave para buscar el vídeo que deseas.</li>
+          <li>Selecciona el formato que deseas descargar y luego pulsa "Descargar". Después de unos segundos, podrás descargar el archivo.</li>
+        </ol>
+      </dd>
+      
+      <dt>P: ¿Dónde se guardan los archivos descargados?</dt>
+      <dd>R: Los archivos que has descargado se guardan automáticamente en la carpeta de Descargas o en la sección "historial de descargas" de tu dispositivo.</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- Pie de página -->
+<footer class="footer">
+  <div class="container text-center">
+    <p>&copy; MP3YouTube - 2024 (v9.12u)</p>
+    <ul class="footer-links">
+      <li><a href="#">Acerca de</a></li>
+      <li><a href="#">Política de Privacidad</a></li>
+      <li><a href="#">Términos de Servicio</a></li>
+      <li><a href="#">Contacto</a></li>
+    </ul>
+  </div>
+</footer>
+
+
+
+
+  <!-- Spinner para retroalimentación de carga -->
+  <div class="spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+
+  <!-- Ajustado para usar Bootstrap 5 y asegurar la funcionalidad JavaScript -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/scripts.js"></script>
+</body>
+
+</html>

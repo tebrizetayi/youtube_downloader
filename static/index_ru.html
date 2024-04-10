@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>m3youtube - Конвертер YouTube в MP3</title>
+  <!-- Bootstrap CSS - Обновлено до Bootstrap 5 для согласованности с вашим старым HTML -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon_96.png">
+</head>
+
+<body>
+  <!-- Панель навигации -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">MP3YOUTUBE</a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Загрузчик с YouTube</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Авторское право</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Язык
+          </a>
+          <div class="dropdown-menu" aria-labelledby="languageDropdown">
+            <a class="dropdown-item" href="/en">Английский</a>
+            <a class="dropdown-item" href="/es">Испанский</a>
+            <a class="dropdown-item" href="/fr">Французский</a>
+            <a class="dropdown-item" href="/de">Немецкий</a>
+            <a class="dropdown-item" href="/ru">Русский</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Основной заголовок -->
+  <header class="main-header">
+    <div class="container">
+      <h1>КОНВЕРТЕР YOUTUBE В MP3</h1>
+      <p>Конвертируйте и скачивайте видео с YouTube в MP3</p>
+      <form id="download-form">
+        <div class="search-box row">
+          <div class="col-10">
+            <input class="form-control me-2" type="search" placeholder="Введите URL видео с YouTube" aria-label="Search"
+              id="url-input">
+          </div>
+          <div class="col-2">
+            <button class="btn btn-primary" type="submit" id="convert-btn">Конвертировать</button>
+          </div>
+        </div>
+      </form>
+      <div class="terms">Используя наш сервис, вы принимаете наши <a href="#">Условия обслуживания</a> и <a href="#">Политику конфиденциальности</a></div>
+    </div>
+  </header>
+  <div class="container text-center">
+    <div class="justify-content-center align-items-center spinner" style="display: none;" id="spinner-container">
+
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-secondary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-success" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-danger" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-warning" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-info" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-dark" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
+    <div class="center-div">
+      <button class="btn btn-primary" type="submit" id="download-btn">
+        <span id="download-text">Скачать</span>
+      </button>
+    </div>
+    <div class="row mt-5" id="video-details" style="display: none;">
+      <div class="col-md-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Название видео</th>
+              <th>Продолжительность</th>
+            </tr>
+          </thead>
+          <tbody id="video-details-table">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+
+  <!-- Секция контента -->
+  <section class="content-section">
+    <div class="container">
+      <h2>ЛУЧШИЙ КОНВЕРТЕР YOUTUBE В MP3</h2>
+      <p>MP3YouTube — это лучший конвертер и загрузчик с YouTube в MP3. Это один из самых быстрых инструментов для конвертации видео с YouTube в музыку. Он очень прост в использовании с его супер-удобным интерфейсом и очень удобен. Файлы музыки в формате MP3 высокого качества доступны пользователю в течение нескольких секунд благодаря быстрой скорости конвертации. Вам даже не нужно загружать никакое программное обеспечение или создавать аккаунт для использования нашего сервиса. Наслаждайтесь неограниченной конвертацией музыки с YouTube в лучшем доступном качестве. Мы будем добавлять еще больше форматов в будущем, так что следите за обновлениями. Попробуйте нас один раз, и мы гарантируем, что вы будете в восторге от качества нашего сервиса. MP3YouTube бесплатен сейчас и всегда будет</p>
+
+      <div class="how-to">
+        <div class="row">
+          <div class="col-md-4 step">
+            <span class="step-number">1</span>
+            <h4>Начало</h4>
+            <p>Вставьте URL YouTube или введите ключевые слова в строку поиска.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number-2">2</span>
+            <h4>Конвертировать</h4>
+            <p>Нажмите кнопку Конвертировать, чтобы начать процесс.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number">3</span>
+            <h4>Скачать</h4>
+            <p>Подождите момент, пока ссылка обрабатывается, а затем скачайте.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-section">
+    <div class="container">
+      <div class="row feature-row">
+        <!-- Функция 1 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>БЫСТРЫЙ, БЕСПЛАТНЫЙ И ЛЕГКИЙ В ИСПОЛЬЗОВАНИИ</h3>
+            <p>Использование нашего загрузчика с YouTube — это быстрый и легкий способ скачать и сохранить любое видео с YouTube в форматах MP3 или MP4. Просто скопируйте URL YouTube, вставьте его в строку поиска и нажмите кнопку Конвертировать. Нет необходимости регистрировать аккаунты.</p>
+          </div>
+        </div>
+        <!-- Функция 2 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>ПОДДЕРЖКА ВСЕХ ПЛАТФОРМ</h3>
+            <p>Мы поддерживаем все платформы устройств. Легко конвертируйте видео с YouTube в MP3 файлы, независимо от того, используете ли вы Windows, Mac или Linux, Android, iPhone.</p>
+          </div>
+        </div>
+        <!-- Функция 3 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>СКОРО БУДЕТ ЕЩЕ БОЛЬШЕ ФОРМАТОВ</h3>
+            <p>Мы поддерживаем формат YouTube в MP3 до сих пор, но не волнуйтесь, потому что в будущем у нас будет еще больше форматов. Следите за обновлениями!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row feature-row">
+        <!-- Функция 1 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>БЕЗ ОГРАНИЧЕНИЙ</h3>
+            <p>Скачивайте и конвертируйте видео с YouTube столько, сколько хотите, без ограничений и всегда бесплатно.</p>
+          </div>
+        </div>
+        <!-- Функция 2 -->
+        <div class="col-md-4">
+          <div class="feature-card ">
+            <h3>100% БЕЗОПАСНО И ЧИСТО</h3>
+            <p>С растущим осознанием безопасности устройств, люди придают большое значение личным данным. Наш сервис абсолютно чистый, без вирусов, под строгим наблюдением на основе базы данных безопасности.</p>
+          </div>
+        </div>
+        <!-- Функция 3 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>ВСЕГДА АКТУАЛЬНО</h3>
+            <p>Мы работаем круглосуточно, чтобы убедиться, что мы в курсе всех изменений, которые YouTube вносит на ежемесячной основе.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Раздел FAQ -->
+<section class="faq-section">
+  <div class="container">
+    <h2>ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
+    <dl class="faq-list">
+      <dt>В: Есть ли ограничение на количество файлов, скачиваемых одним пользователем?</dt>
+      <dd>О: Нет. Наш веб-сайт позволяет пользователям конвертировать и скачивать неограниченное количество файлов без ограничений.</dd>
+      
+      <dt>В: Есть ли скрытые платежи за MP3 YouTube?</dt>
+      <dd>О: Нет. Наш веб-сайт абсолютно бесплатен. Вы можете конвертировать видео с YouTube в MP3.</dd>
+      
+      <dt>В: Какие устройства совместимы с конвертацией?</dt>
+      <dd>О: Мы предлагаем сервис, совместимый со всеми устройствами PC, смартфонами и планшетами.</dd>
+      
+      <dt>В: Как скачать видео с YouTube на мобильный телефон Android?</dt>
+      <dd>О: 
+        <ol>
+          <li>Перейдите на YouTube через ваш браузер или откройте приложение YouTube на вашем устройстве Android; после этого скопируйте URL видео, которое вы хотите скачать.</li>
+          <li>Вставьте URL в строку поиска. Вы также можете ввести ключевое слово, чтобы найти видео, которое вы ищете.</li>
+          <li>Выберите формат, который вы хотите скачать, затем нажмите "Скачать". Через несколько секунд вы сможете скачать файл.</li>
+        </ol>
+      </dd>
+      
+      <dt>В: Где сохраняются скачанные файлы?</dt>
+      <dd>О: Файлы, которые вы скачали, автоматически сохраняются в папке "Загрузки" или в разделе "история загрузок" вашего устройства.</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- Футер -->
+<footer class="footer">
+  <div class="container text-center">
+    <p>&copy; MP3YouTube - 2024 (v9.12u)</p>
+    <ul class="footer-links">
+      <li><a href="#">О нас</a></li>
+      <li><a href="#">Политика конфиденциальности</a></li>
+      <li><a href="#">Условия обслуживания</a></li>
+      <li><a href="#">Контакты</a></li>
+    </ul>
+  </div>
+</footer>
+
+
+
+
+  <!-- Спиннер для обратной связи о загрузке -->
+  <div class="spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Загрузка...</span>
+    </div>
+  </div>
+
+
+  <!-- Адаптировано для использования Bootstrap 5 и обеспечения функциональности JavaScript -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/scripts.js"></script>
+</body>
+
+</html>

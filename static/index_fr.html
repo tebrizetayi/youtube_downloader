@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>m3youtube - Convertisseur YouTube en MP3</title>
+  <!-- Bootstrap CSS - Mis à jour vers Bootstrap 5 pour la cohérence avec votre ancien HTML -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon_96.png">
+</head>
+
+<body>
+  <!-- Barre de navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">MP3YOUTUBE</a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Téléchargeur YouTube</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Droit d'auteur</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Langue
+          </a>
+          <div class="dropdown-menu" aria-labelledby="languageDropdown">
+            <a class="dropdown-item" href="/en">Anglais</a>
+            <a class="dropdown-item" href="/es">Espagnol</a>
+            <a class="dropdown-item" href="/fr">Français</a>
+            <a class="dropdown-item" href="/de">Allemand</a>
+            <a class="dropdown-item" href="/ru">Russe</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- En-tête principal -->
+  <header class="main-header">
+    <div class="container">
+      <h1>CONVERTISSEUR YOUTUBE EN MP3</h1>
+      <p>Convertissez et téléchargez des vidéos YouTube en MP3</p>
+      <form id="download-form">
+        <div class="search-box row">
+          <div class="col-10">
+            <input class="form-control me-2" type="search" placeholder="Entrez l'URL de la vidéo YouTube" aria-label="Search"
+              id="url-input">
+          </div>
+          <div class="col-2">
+            <button class="btn btn-primary" type="submit" id="convert-btn">Convertir</button>
+          </div>
+        </div>
+      </form>
+      <div class="terms">En utilisant notre service, vous acceptez nos <a href="#">Conditions d'utilisation</a> & <a href="#">Politique de confidentialité</a></div>
+    </div>
+  </header>
+  <div class="container text-center">
+    <div class="justify-content-center align-items-center spinner" style="display: none;" id="spinner-container">
+
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-secondary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-success" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-danger" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-warning" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-info" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-dark" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
+    <div class="center-div">
+      <button class="btn btn-primary" type="submit" id="download-btn">
+        <span id="download-text">Télécharger</span>
+      </button>
+    </div>
+    <div class="row mt-5" id="video-details" style="display: none;">
+      <div class="col-md-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Titre de la vidéo</th>
+              <th>Durée</th>
+            </tr>
+          </thead>
+          <tbody id="video-details-table">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+
+  <!-- Section de contenu -->
+  <section class="content-section">
+    <div class="container">
+      <h2>LE MEILLEUR CONVERTISSEUR YOUTUBE EN MP3</h2>
+      <p>MP3YouTube est le meilleur convertisseur et téléchargeur de YouTube en MP3. C'est l'un des outils les plus rapides pour convertir des vidéos YouTube en musique. Il est très facile à utiliser avec son interface super conviviale et est très pratique. Les fichiers musicaux mp3 de haute qualité sont accessibles par l'utilisateur en quelques secondes grâce à la vitesse de conversion rapide. Vous n'avez même pas besoin de télécharger un logiciel ou de créer un compte pour utiliser notre service. Profitez d'une conversion illimitée de musique depuis YouTube dans la meilleure qualité disponible. Nous ajouterons de nombreux autres formats à l'avenir, alors restez à l'écoute pour cela. Essayez-nous une fois et nous vous garantissons que vous serez ravi de la qualité de notre service. MP3YouTube est gratuit maintenant et le sera toujours</p>
+
+      <div class="how-to">
+        <div class="row">
+          <div class="col-md-4 step">
+            <span class="step-number">1</span>
+            <h4>Commencer</h4>
+            <p>Collez l'URL de YouTube ou entrez des mots-clés dans la zone de recherche.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number-2">2</span>
+            <h4>Convertir</h4>
+            <p>Cliquez sur le bouton Convertir pour démarrer le processus.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number">3</span>
+            <h4>Télécharger</h4>
+            <p>Attendez un moment pour que le lien soit traité, puis téléchargez.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-section">
+    <div class="container">
+      <div class="row feature-row">
+        <!-- Fonctionnalité 1 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>RAPIDE, GRATUIT ET FACILE À UTILISER</h3>
+            <p>Utiliser notre téléchargeur YouTube est le moyen rapide et facile de télécharger et de sauvegarder n'importe quelle vidéo YouTube en MP3 ou MP4. Copiez simplement l'URL de YouTube, collez-la dans la boîte de recherche et cliquez sur le bouton Convertir. Aucun compte à enregistrer n'est nécessaire.</p>
+          </div>
+        </div>
+        <!-- Fonctionnalité 2 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>TOUS LES PLATEFORMES SONT SUPPORTÉES</h3>
+            <p>Nous supportons toutes les plateformes de dispositifs. Facile de convertir des vidéos YouTube en fichiers MP3, que vous utilisiez Windows, Mac ou Linux, Android, iPhone.</p>
+          </div>
+        </div>
+        <!-- Fonctionnalité 3 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>DE NOMBREUX FORMATS À VENIR</h3>
+            <p>Nous supportons le format YouTube en MP3 pour le moment, mais ne vous inquiétez pas car nous aurons de nombreux autres formats à l'avenir. Restez à l'écoute!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row feature-row">
+        <!-- Fonctionnalité 1 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>SANS LIMITATION</h3>
+            <p>Téléchargez et convertissez des vidéos YouTube autant que vous le souhaitez sans limitation et toujours gratuitement.</p>
+          </div>
+        </div>
+        <!-- Fonctionnalité 2 -->
+        <div class="col-md-4">
+          <div class="feature-card ">
+            <h3>100% SÛR ET PROPRE</h3>
+            <p>Avec la prise de conscience croissante de la sécurité des dispositifs, les gens attachent une grande importance aux données personnelles. Le service est totalement propre sans virus sous une supervision intense basée sur la base de données de sécurité.</p>
+          </div>
+        </div>
+        <!-- Fonctionnalité 3 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>TOUJOURS À JOUR</h3>
+            <p>Nous travaillons 24 heures sur 24 pour nous assurer que nous sommes à jour avec tous les changements que YouTube apporte sur une base mensuelle.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section FAQ -->
+<section class="faq-section">
+  <div class="container">
+    <h2>QUESTIONS FRÉQUEMMENT POSÉES</h2>
+    <dl class="faq-list">
+      <dt>Q : Y a-t-il une limite au nombre de fichiers téléchargés par utilisateur ?</dt>
+      <dd>R : Non. Notre site web permet aux utilisateurs de convertir et de télécharger un nombre illimité de fichiers sans limites.</dd>
+      
+      <dt>Q : Y a-t-il des frais cachés pour MP3 YouTube ?</dt>
+      <dd>R : Non. Notre site web est absolument gratuit. Vous pouvez convertir des vidéos de YouTube en MP3.</dd>
+      
+      <dt>Q : Quels sont les dispositifs compatibles pour la conversion ?</dt>
+      <dd>R : Nous offrons le service qui est compatible avec tous les dispositifs PC, smartphones et tablettes.</dd>
+      
+      <dt>Q : Comment télécharger une vidéo YouTube sur un téléphone mobile Android ?</dt>
+      <dd>R : 
+        <ol>
+          <li>Accédez à YouTube depuis votre navigateur ou ouvrez l'application YouTube sur votre appareil Android ; après cela, copiez l'URL de la vidéo que vous souhaitez télécharger.</li>
+          <li>Collez l'URL dans la boîte de recherche. Vous pouvez également entrer un mot-clé pour rechercher la vidéo que vous souhaitez.</li>
+          <li>Sélectionnez le format que vous souhaitez télécharger puis appuyez sur "Télécharger". Après quelques secondes, vous pouvez télécharger le fichier.</li>
+        </ol>
+      </dd>
+      
+      <dt>Q : Où les fichiers téléchargés sont-ils sauvegardés ?</dt>
+      <dd>R : Les fichiers que vous avez téléchargés sont automatiquement enregistrés dans le dossier Téléchargements ou dans la section "historique de téléchargement" de votre dispositif.</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- Pied de page -->
+<footer class="footer">
+  <div class="container text-center">
+    <p>&copy; MP3YouTube - 2024 (v9.12u)</p>
+    <ul class="footer-links">
+      <li><a href="#">À propos</a></li>
+      <li><a href="#">Politique de confidentialité</a></li>
+      <li><a href="#">Conditions d'utilisation</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+
+
+
+  <!-- Spinner pour le retour de chargement -->
+  <div class="spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visuellement-caché">Chargement...</span>
+    </div>
+  </div>
+
+
+  <!-- Ajusté pour utiliser Bootstrap 5 et assurer la fonctionnalité JavaScript -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/scripts.js"></script>
+</body>
+
+</html>

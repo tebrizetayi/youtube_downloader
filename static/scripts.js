@@ -1,3 +1,9 @@
+// Initialize Bootstrap dropdown
+var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+  return new bootstrap.Dropdown(dropdownToggleEl)
+});
+
 const form = document.getElementById('download-form');
 const resultDiv = document.getElementById('result');
 const spinner = document.getElementsByClassName('spinner')[0];
@@ -110,3 +116,4 @@ if (urlParams.has('v')) {
   document.getElementById('url-input').value = 'https://www.youtube.com/watch?v=' + urlParams.get('v');
   submitForm();
 }
+
