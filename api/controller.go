@@ -92,7 +92,7 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 	}
 
 	// Check if the video is longer than 180 minutes
-	if isValid, err := c.YVideoprofiler.CheckVideoDuration(ctx, url, 54000); err != nil || !isValid {
+	if isValid, err := c.YVideoprofiler.CheckVideoDuration(ctx, url, 900); err != nil || !isValid {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -423,5 +423,5 @@ func getIP(r *http.Request) (string, error) {
 	if netIP != nil {
 		return ip, nil
 	}
-	return "", fmt.Errorf("No valid ip found")
+	return "", fmt.Errorf("no valid ip found")
 }
