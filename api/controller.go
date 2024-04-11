@@ -311,13 +311,13 @@ func (c *YoutubeConvertorController) RedirectHandler(w http.ResponseWriter, r *h
 	}
 
 	// Check if the video is longer than 180 minutes
-	if isValid, err := c.YVideoprofiler.CheckVideoDuration(ctx, url, 144000); err != nil || !isValid {
+	if isValid, err := c.YVideoprofiler.CheckVideoDuration(ctx, url, 900); err != nil || !isValid {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		if !isValid {
-			http.Error(w, "Video is longer than 180 minutes", http.StatusBadRequest)
+			http.Error(w, "Video is longer than 15 minutes", http.StatusBadRequest)
 			return
 		}
 	}
