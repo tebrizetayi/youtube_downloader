@@ -7,6 +7,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
+	"strings"
 
 	"net/http"
 	"net/url"
@@ -33,7 +35,12 @@ func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader,
 
 // DownloadMp3
 func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.Request) {
-	log.Println("Download mp3 request received")
+	ip, err := getIP(r)
+	if err != nil {
+		http.Error(w, "Error getting IP", http.StatusBadRequest)
+		return
+	}
+	log.Printf("Download mp3 request received from Ip:%s\n", ip)
 	// Open the file to be downloaded
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
@@ -387,4 +394,34 @@ func (c *YoutubeConvertorController) WatchHandler(w http.ResponseWriter, r *http
 func (c YoutubeConvertorController) GenerateHash(str string) string {
 	hashSum := md5.Sum([]byte(str))
 	return hex.EncodeToString(hashSum[:])
+}
+
+func getIP(r *http.Request) (string, error) {
+	//Get IP from the X-REAL-IP header
+	ip := r.Header.Get("X-REAL-IP")
+	netIP := net.ParseIP(ip)
+	if netIP != nil {
+		return ip, nil
+	}
+
+	//Get IP from X-FORWARDED-FOR header
+	ips := r.Header.Get("X-FORWARDED-FOR")
+	splitIps := strings.Split(ips, ",")
+	for _, ip := range splitIps {
+		netIP := net.ParseIP(ip)
+		if netIP != nil {
+			return ip, nil
+		}
+	}
+
+	//Get IP from RemoteAddr
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return "", err
+	}
+	netIP = net.ParseIP(ip)
+	if netIP != nil {
+		return ip, nil
+	}
+	return "", fmt.Errorf("No valid ip found")
 }
