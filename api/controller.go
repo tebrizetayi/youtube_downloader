@@ -41,6 +41,9 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 		return
 	}
 	log.Printf("Download mp3 request received from Ip:%s\n", ip)
+
+	referer := r.Referer()
+	log.Printf("Referer: %s", referer)
 	// Open the file to be downloaded
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
