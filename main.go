@@ -1,12 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"strconv"
 	"syscall"
+	"time"
 	"youtube_download/api"
 	"youtube_download/internal/convertor"
 	"youtube_download/internal/downloader"
@@ -50,19 +53,59 @@ func main() {
 		serverErrors <- api.ListenAndServe()
 	}()
 
-	// =========================================================================
-	// Shutdown
-	// Blocking main and waiting for shutdown.
-	select {
-	case err := <-serverErrors:
-		log.Fatalf("main : Error starting server: %+v", err)
+	root := "/go/src/app"
+	ticker := time.NewTicker(15 * time.Minute) // Set up a ticker that ticks every 15 minutes
+	defer ticker.Stop()                        // Ensure the ticker is stopped to free resources
 
-	case sig := <-shutdown:
-		log.Printf("main : %v : Start shutdown..", sig)
+	// Perform an initial check before starting the ticker
+	fmt.Println("Performing initial file check and deletion...")
+	filepath.Walk(root, deleteOldFiles)
+
+	for {
+		select {
+		case <-ticker.C: // Wait for the next tick
+			fmt.Println("Performing scheduled file check and deletion...")
+			filepath.Walk(root, deleteOldFiles)
+
+		case err := <-serverErrors:
+			log.Fatalf("main : Error starting server: %+v", err)
+
+		case sig := <-shutdown:
+			log.Printf("main : %v : Start shutdown..", sig)
+		}
 	}
 }
 
 // ConvertIntToString : Convert int to string
 func ConvertIntToString(i int) string {
 	return strconv.Itoa(i)
+}
+
+func deleteOldFiles(path string, fileInfo os.FileInfo, err error) error {
+	if err != nil {
+		fmt.Println(err) // print any error but continue
+		return nil
+	}
+	log.Println("path:", path)
+
+	// Check if the file is an mp3 or mp4
+	if filepath.Ext(path) == "mp3" || filepath.Ext(path) == "mp4" {
+		// Get the creation time of the file
+		stat, err := os.Stat(path)
+		if err != nil {
+			fmt.Println(err)
+			return nil
+		}
+
+		// Calculate time difference
+		if time.Since(stat.ModTime()) > 15*time.Minute {
+			// If the file is older than 15 minutes, delete it
+			fmt.Println("Deleting:", path)
+			err := os.Remove(path)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
+	}
+	return nil
 }
