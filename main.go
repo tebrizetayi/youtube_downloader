@@ -54,12 +54,9 @@ func main() {
 	}()
 
 	root := "/go/src/app"
-	ticker := time.NewTicker(15 * time.Minute) // Set up a ticker that ticks every 15 minutes
-	defer ticker.Stop()                        // Ensure the ticker is stopped to free resources
-
-	// Perform an initial check before starting the ticker
-	fmt.Println("Performing initial file check and deletion...")
-	filepath.Walk(root, deleteOldFiles)
+	duration := 10 * time.Minute
+	ticker := time.NewTicker(duration) // Set up a ticker that ticks every 15 minutes
+	defer ticker.Stop()                // Ensure the ticker is stopped to free resources
 
 	for {
 		select {
@@ -82,25 +79,28 @@ func ConvertIntToString(i int) string {
 }
 
 func deleteOldFiles(path string, fileInfo os.FileInfo, err error) error {
+	duration := 10 * time.Minute
 	if err != nil {
-		fmt.Println(err) // print any error but continue
+		log.Println(err) // print any error but continue
 		return nil
 	}
 	log.Println("path:", path)
 
 	// Check if the file is an mp3 or mp4
-	if filepath.Ext(path) == "mp3" || filepath.Ext(path) == "mp4" {
+	if filepath.Ext(path) == ".mp3" || filepath.Ext(path) == ".mp4" {
 		// Get the creation time of the file
 		stat, err := os.Stat(path)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			return nil
 		}
 
+		log.Println(stat.ModTime())
+		log.Println(time.Since(stat.ModTime()))
 		// Calculate time difference
-		if time.Since(stat.ModTime()) > 15*time.Minute {
+		if time.Since(stat.ModTime()) > duration {
 			// If the file is older than 15 minutes, delete it
-			fmt.Println("Deleting:", path)
+			log.Println("Deleting:", path)
 			err := os.Remove(path)
 			if err != nil {
 				fmt.Println(err)
