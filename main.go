@@ -84,7 +84,6 @@ func deleteOldFiles(path string, fileInfo os.FileInfo, err error) error {
 		log.Println(err) // print any error but continue
 		return nil
 	}
-	log.Println("path:", path)
 
 	// Check if the file is an mp3 or mp4
 	if filepath.Ext(path) == ".mp3" || filepath.Ext(path) == ".mp4" {
@@ -95,8 +94,6 @@ func deleteOldFiles(path string, fileInfo os.FileInfo, err error) error {
 			return nil
 		}
 
-		log.Println(stat.ModTime())
-		log.Println(time.Since(stat.ModTime()))
 		// Calculate time difference
 		if time.Since(stat.ModTime()) > duration {
 			// If the file is older than 15 minutes, delete it
