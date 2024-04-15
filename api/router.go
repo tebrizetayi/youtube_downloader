@@ -26,6 +26,10 @@ func NewAPI(y YoutubeConvertorController) http.Handler {
 		http.ServeFile(w, r, "static/robots.txt")
 	})
 
+	router.Path("/Sitemap.xml").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/sitemap.xml")
+	})
+
 	router.Path("/es").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/index_es.html")
 	})
