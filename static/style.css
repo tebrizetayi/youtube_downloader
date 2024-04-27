@@ -280,30 +280,25 @@ body {
   .footer .footer-links a:hover {
     text-decoration: underline;
   }
-  
   .download-tip {
-    border: 1px solid #ccc; /* Adds a light grey border */
-    background-color: #f9f9f9; /* Light grey background for better contrast */
-    padding: 15px; /* Adds space inside the borders */
-    border-radius: 8px; /* Rounds the corners of the border */
-    margin-top: 20px; /* Adds space above the tip container */
+    border: 1px solid #ccc; /* Light grey border */
+    padding: 10px; /* Padding inside the div */
+    border-radius: 5px; /* Rounded corners */
+    margin-top: 20px; /* Top margin */
+    background-color: #f8f9fa; /* Light background color for contrast */
 }
 
-.tips {
-    color: #333; /* Dark grey text color for better readability */
-    font-size: 16px; /* Sets a standard font size */
+.tips .tos-info {
+    color: #343a40; /* Darker text for better readability */
+    font-size: 16px; /* Standard font size */
 }
 
-.tos-info {
-    margin-bottom: 10px; /* Adds space below the tip paragraph */
-}
-
-.example-url {
-    display: block; /* Makes the example URL appear on a new line */
-    color: #555; /* Slightly lighter text color for the URL */
+.tips .example-url {
+    font-weight: normal; /* Standard font weight */
 }
 
 .highlight {
-    color: #d63447; /* A bright color to highlight the 'mz' part */
-    font-weight: bold; /* Makes the 'mz' part bold */
+    font-weight: bold; /* Bold for emphasis */
+    color: #dc3545; /* Bootstrap danger color for contrast */
 }
+

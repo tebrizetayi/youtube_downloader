@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>m3youtube - YouTube'dan MP3'e Dönüştürücü</title>
+  <!-- Bootstrap CSS - Bootstrap 5 ile güncellendi -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon_96.png">
+</head>
+
+<body>
+  <!-- Navigasyon çubuğu -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">MP3YOUTUBE</a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">YouTube İndirici</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Telif Hakkı</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Dil
+          </a>
+          <div class="dropdown-menu" aria-labelledby="languageDropdown">
+            <a class="dropdown-item" href="/en">İngilizce</a>
+            <a class="dropdown-item" href="/es">İspanyolca</a>
+            <a class="dropdown-item" href="/de">Almanca</a>
+            <a class="dropdown-item" href="/fr">Fransızca</a>
+            <a class="dropdown-item" href="/ru">Rusça</a>
+            <a class="dropdown-item" href="/tr">Türkçe</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Ana başlık -->
+  <header class="main-header">
+    <div class="container">
+        <h1>YOUTUBE'DAN MP3'E DÖNÜŞTÜRÜCÜ</h1>
+        <p>YouTube videolarını MP3'e dönüştürün ve indirin</p>
+        <form id="download-form">
+            <div class="search-box row">
+                <div class="col-10">
+                    <input class="form-control me-2" type="search" placeholder="YouTube video URL'si girin" aria-label="Arama" id="url-input">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary" type="submit" id="convert-btn">Dönüştür</button>
+                </div>
+            </div>
+        </form>
+        <div id="DownloadTip" class="download-tip mt-3 col-10">
+            <div class="tips">
+                <p class="tos-info"><strong>İpucu:</strong> URL çubuğunda <strong>"YouTube"</strong> öncesine <strong>"m3"</strong> ekleyerek YouTube'dan mp3 dosyalarını daha hızlı indirin.</p>
+                <span class="example-url">Örnek: https://www.<span class="highlight">m3</span>youtube.com/watch?v=pRpeEdMmmQ0</span>
+            </div>
+        </div>
+        <div class="terms col-10">Hizmetimizi kullanarak <a href="#">Hizmet Şartlarımızı</a> ve <a href="#">Gizlilik Politikamızı</a> kabul etmiş olursunuz.</div>
+    </div>
+</header>
+
+  <div class="container text-center">
+    <div class="justify-content-center align-items-center spinner" style="display: none;" id="spinner-container">
+
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-secondary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <div class="spinner-border text-success" role="status">
+        <span the="sr-only"></span>
+      </div>
+      <div class="spinner-border text-danger" role="status">
+        <span the="sr-only"></span>
+      </div>
+      <div class="spinner-border text-warning" role="status">
+        <span the="sr-only"></span>
+      </div>
+      <div the="spinner-border text-info" role="status">
+        <span the="sr-only"></span>
+      </div>
+      <div the="spinner-border text-dark" role="status">
+        <span the="sr-only"></span>
+      </div>
+    </div>
+    <div class="center-div">
+      <button class="btn btn-primary" type="submit" id="download-btn">
+        <span id="download-text">İndir</span>
+      </button>
+    </div>
+    <div class="row mt-5" id="video-details" style="display: none;">
+      <div class="col-md-10">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Video Başlığı</th>
+              <th>Süre</th>
+            </tr>
+          </thead>
+          <tbody id="video-details-table">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+
+  <!-- İçerik Bölümü -->
+  <section class="content-section">
+    <div class="container">
+      <h2>EN İYİ YOUTUBE'DAN MP3'E DÖNÜŞTÜRÜCÜ</h2>
+      <p>MP3YouTube, YouTube videolarını müziğe dönüştürmek için en hızlı araçlardan biridir. Kullanımı çok kolaydır, süper kullanıcı dostu arayüzü ile çok kullanışlıdır. Yüksek kaliteli mp3 müzik dosyalarına saniyeler içinde erişilebilir, hızlı dönüştürme hızı sayesinde. Hizmetimizi kullanmak için herhangi bir yazılım indirmenize veya hesap oluşturmanıza gerek yoktur. YouTube'dan en iyi kalitede müzik dönüştürmelerinin tadını çıkarın. Gelecekte daha fazla format ekleyeceğiz, bu yüzden bizi takip etmeye devam edin. Bir kez deneyin, hizmetimizin kalitesiyle memnun kalacağınızı garanti ediyoruz. MP3YouTube şu anda ücretsizdir ve her zaman ücretsiz olacaktır.</p>
+
+      <div class="how-to">
+        <div class="row">
+          <div class="col-md-4 step">
+            <span class="step-number">1</span>
+            <h4>Başla</h4>
+            <p>YouTube URL'sini yapıştırın veya arama kutusuna anahtar kelime girin.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number-2">2</span>
+            <h4>Dönüştür</h4>
+            <p>İşlemi başlatmak için Dönüştür butonuna tıklayın.</p>
+          </div>
+          <div class="col-md-4 step">
+            <span class="step-number">3</span>
+            <h4>İndir</h4>
+            <p>Bağlantının işlenmesi için biraz bekleyin, ardından indirin.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-section">
+    <div class="container">
+      <div class="row feature-row">
+        <!-- Özellik 1 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>HIZLI, ÜCRETSİZ VE KOLAY KULLANIM</h3>
+            <p>YouTube indiricimizi kullanmak YouTube video indirmek ve MP3 veya MP4 olarak kaydetmek için hızlı ve kolay bir yoldur. YouTube URL'sini kopyalayın, arama kutusuna yapıştırın ve Dönüştür butonuna basın. Hesap oluşturmanız gerekmez.</p>
+          </div>
+        </div>
+        <!-- Özellik 2 -->
+        <div class="col-md-4">
+          <div class="feature-card">
+            <h3>TÜM PLATFORM
+                LAR DESTEKLENMEKTEDİR</h3>
+                <p>Tüm cihaz platformlarını destekliyoruz. Windows, Mac veya Linux, Android, iPhone kullanıyor olmanız fark etmeksizin YouTube videolarını MP3 dosyalarına kolayca dönüştürebilirsiniz.</p>
+              </div>
+            </div>
+            <!-- Özellik 3 -->
+            <div class="col-md-4">
+              <div class="feature-card">
+                <h3>YAKINDA DAHA FAZLA FORMAT</h3>
+                <p>Şu an için YouTube'dan MP3 formatını destekliyoruz, ama endişelenmeyin çünkü gelecekte birçok yeni format ekleyeceğiz. Bizi takip etmeye devam edin!</p>
+              </div>
+            </div>
+          </div>
+    
+          <div class="container">
+            <div class="row feature-row">
+              <!-- Özellik 1 -->
+              <div class="col-md-4">
+                <div class="feature-card">
+                  <h3>SINIRSIZ KULLANIM</h3>
+                  <p>YouTube videolarını istediğiniz kadar dönüştürün ve indirin, sınırlama yok ve her zaman ücretsiz.</p>
+                </div>
+              </div>
+              <!-- Özellik 2 -->
+              <div class="col-md-4">
+                <div class="feature-card">
+                  <h3>%100 GÜVENLİ VE TEMİZ</h3>
+                  <p>Cihaz güvenliği konusunda artan farkındalık ile insanlar kişisel verilere büyük önem vermektedir. Servisimiz, güvenlik veritabanına dayalı yoğun denetim altında tamamen temiz ve virüssüzdür.</p>
+                </div>
+              </div>
+              <!-- Özellik 3 -->
+              <div class="col-md-4">
+                <div class="feature-card">
+                  <h3>HER ZAMAN GÜNCEL</h3>
+                  <p>YouTube'un her ay yaptığı değişikliklerle başa çıkabilmek için gece gündüz çalışıyoruz.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+      <!-- SSS Bölümü -->
+      <section class="faq-section">
+        <div class="container">
+          <h2>SİKÇA SORULAN SORULAR</h2>
+          <dl class="faq-list">
+            <dt>S: Bir kullanıcının indirebileceği dosya sayısında herhangi bir sınır var mı?</dt>
+            <dd>C: Hayır. Web sitemiz, kullanıcıların sınırsız dosya dönüştürmesine ve indirmesine izin verir.</dd>
+    
+            <dt>S: MP3 YouTube'un gizli ücretleri var mı?</dt>
+            <dd>C: Hayır. Web sitemiz tamamen ücretsizdir. YouTube videolarını MP3'e dönüştürebilirsiniz.</dd>
+    
+            <dt>S: Dönüşüm için uyumlu cihazlar nelerdir?</dt>
+            <dd>C: Tüm PC cihazları, akıllı telefonlar ve tabletler ile uyumlu hizmet sunuyoruz.</dd>
+    
+            <dt>S: Android mobil telefonuna YouTube videosu nasıl indirilir?</dt>
+            <dd>
+              <ol>
+                <li>Android cihazınızda tarayıcınızdan YouTube'a erişin veya YouTube uygulamasını açın; ardından indirmek istediğiniz video URL'sini kopyalayın.</li>
+                <li>URL'yi arama kutusuna yapıştırın. İstediğiniz videoyu aramak için anahtar kelime de girebilirsiniz.</li>
+                <li>İndirmek istediğiniz formatı seçin ve "İndir"e dokunun. Birkaç saniye sonra dosyayı indirebilirsiniz.</li>
+              </ol>
+            </dd>
+    
+            <dt>S: İndirilen dosyalar nereye kaydedilir?</dt>
+            <dd>C: İndirdiğiniz dosyalar otomatik olarak cihazınızda "İndirilenler" klasörüne veya "indirme geçmişi" bölümüne kaydedilir.</dd>
+          </dl>
+        </div>
+      </section>
+    
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container text-center">
+          <p>&copy; MP3YouTube - 2024 (v9.12u)</p>
+          <ul class="footer-links">
+            <li><a href="#">Hakkında</a></li>
+            <li><a href="#">Gizlilik Politikası</a></li>
+            <li><a href="#">Kullanım Şartları</a></li>
+            <li><a href="#">İletişim</a></li>
+          </ul>
+        </div>
+      </footer>
+    
+      <!-- Yüklenme geri bildirimi için dönen çark -->
+      <div class="spinner">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Yükleniyor...</span>
+        </div>
+      </div>
+    
+      <!-- Bootstrap 5 kullanımını sağlamak ve JavaScript işlevselliğini düzenlemek -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+      <script src="/static/scripts.js"></script>
+    </body>
+    
+    </html>
+    

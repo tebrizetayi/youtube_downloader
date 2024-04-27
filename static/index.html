@@ -37,6 +37,7 @@
             <a class="dropdown-item" href="/de">German</a>
             <a class="dropdown-item" href="/fr">French</a>
             <a class="dropdown-item" href="/ru">Russian</a>
+            <a class="dropdown-item" href="/tr">Turkish</a>
           </div>
         </li>
       </ul>
@@ -46,30 +47,28 @@
   <!-- Main header -->
   <header class="main-header">
     <div class="container">
-      <h1>YOUTUBE TO MP3 CONVERTER</h1>
-      <p>Convert and download YouTube videos to MP3</p>
-      <form id="download-form">
-        <div class="search-box row">
-          <div class="col-10">
-            <input class="form-control me-2" type="search" placeholder="Enter YouTube video URL" aria-label="Search"
-              id="url-input">
-          </div>
-          <div class="col-2">
-            <button class="btn btn-primary" type="submit" id="convert-btn">Convert</button>
-          </div>
+        <h1>YOUTUBE TO MP3 CONVERTER</h1>
+        <p>Convert and download YouTube videos to MP3</p>
+        <form id="download-form">
+            <div class="search-box row">
+                <div class="col-10">
+                    <input class="form-control me-2" type="search" placeholder="Enter YouTube video URL" aria-label="Search" id="url-input">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary" type="submit" id="convert-btn">Convert</button>
+                </div>
+            </div>
+        </form>
+        <div id="DownloadTip" class="download-tip mt-3 col-10">
+            <div class="tips">
+                <p class="tos-info"><strong>Tip:</strong> Insert <strong>"m3"</strong> before <strong>"YouTube"</strong> in the URL bar to download mp3 files from YouTube faster.</p>
+                <span class="example-url">e.g: https://www.<span class="highlight">m3</span>youtube.com/watch?v=pRpeEdMmmQ0</span>
+            </div>
         </div>
-      </form>
-      <div id="DownloadTip" class="download-tip">
-        <div class="tips">
-            <p class="tos-info"><strong>Tip:</strong> Insert <strong>"m3"</strong> before <strong>"YouTube"</strong> in the URL bar to download mp3 files from YouTube faster.</p>
-            <span class="example-url">e.g: https://www.<span class="highlight">m3</span>youtube.com/watch?v=pRpeEdMmmQ0</span>
-        </div>
+        <div class="terms col-10">By using our service you accept our <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a></div>
     </div>
-    
-      <div class="terms">By using our service you accept our <a href="#">Terms of Service</a> & <a href="#">Privacy
-          Policy</a></div>
-    </div>
-  </header>
+</header>
+
   <div class="container text-center">
     <div class="justify-content-center align-items-center spinner" style="display: none;" id="spinner-container">
 
