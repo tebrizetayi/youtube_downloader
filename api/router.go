@@ -54,6 +54,10 @@ func NewAPI(y YoutubeConvertorController) http.Handler {
 		http.ServeFile(w, r, "static/index_tr.html")
 	})
 
+	router.Path("/youtube-mp3").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/index_youtube_mp3.html")
+	})
+
 	return router
 }
 
