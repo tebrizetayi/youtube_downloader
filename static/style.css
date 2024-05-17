@@ -302,3 +302,13 @@ body {
     color: #dc3545; /* Bootstrap danger color for contrast */
 }
 
+
+.custom-link {
+  color: #555;
+  text-decoration: none;
+}
+
+.custom-link:hover {
+  color: #555; /* Ensures the color remains black on hover */
+  text-decoration: none; /* Ensures the underline doesn't appear on hover */
+}
