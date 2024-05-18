@@ -57,8 +57,29 @@ func NewAPI(y YoutubeConvertorController) http.Handler {
 	router.Path("/youtube-mp3").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/index_youtube_mp3.html")
 	})
+
 	router.Path("/fast-free-easy").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/fast-free-easy.html")
+	})
+
+	router.Path("/all-platforms-supported").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/all-platforms-supported.html")
+	})
+
+	router.Path("/many-formats-coming-soon").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/many-formats-coming-soon.html")
+	})
+
+	router.Path("/without-limitations").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/without-limitations.html")
+	})
+
+	router.Path("/safe-and-clean").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/safe-and-clean.html")
+	})
+
+	router.Path("/always-up-to-date").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/always-up-to-date.html")
 	})
 
 	return router

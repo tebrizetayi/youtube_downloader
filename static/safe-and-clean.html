@@ -4,15 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  <title>m3youtube - YouTube to MP3 Converter</title>
-  <!-- Bootstrap CSS - Updated to Bootstrap 5 for consistency with your old HTML -->
+  <title>m3youtube - Fast Free and Easy to Use</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
     crossorigin="anonymous">
   <link rel="stylesheet" href="/static/style.css">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon_96.png">
-  <link rel="canonical" href="https://m3youtube.com/many-formats-coming-soon">
+  <link rel="canonical" href="https://m3youtube.com/fast-free-easy">
   <meta name="msvalidate.01" content="C9C6379A41C3999126D6C247A6142382">
   <meta name="yandex-verification" content="c6d9ff5e1569edb0">
   <meta name="description"
@@ -23,22 +22,21 @@
   <link rel="shortcut icon" href="/static/favicon.ico">
   <meta name="theme-color" content="#ffffff">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="m3youtube - YouTube to MP3 Converter">
+  <meta property="og:title" content="m3youtube - Fast Free and Easy to Use">
   <meta property="og:description" content="Convert and download YouTube videos to MP3">
   <meta property="og:image" content="/static/og-image.png">
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="m3youtube - YouTube to MP3 Converter">
+  <meta property="twitter:title" content="m3youtube - Fast Free and Easy to Use">
   <meta property="twitter:description" content="Convert and download YouTube videos to MP3">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DH7JPPS6K1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-DH7JPPS6K1');
+  </script>
 </head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DH7JPPS6K1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() { dataLayer.push(arguments); }
-  gtag('js', new Date());
-
-  gtag('config', 'G-DH7JPPS6K1');
-</script>
 
 <body>
   <!-- Navigation bar -->
@@ -46,17 +44,11 @@
     <div class="container">
       <a class="navbar-brand" href="/">M3YOUTUBE</a>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/">YouTube Downloader</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Copyright</a>
-        </li>
+        <li class="nav-item"><a class="nav-link" href="/">YouTube Downloader</a></li>
+        <li class="nav-item"><a class="nav-link" href="/">Copyright</a></li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Language
-          </a>
+            aria-haspopup="true" aria-expanded="false">Language</a>
           <div class="dropdown-menu" aria-labelledby="languageDropdown">
             <a class="dropdown-item" href="/en">English</a>
             <a class="dropdown-item" href="/es">Spanish</a>
@@ -72,7 +64,7 @@
 
   <!-- Main header -->
   <header class="main-header">
-    <div class="container">
+    <div class="container text-center">
       <h1>YOUTUBE TO MP3 CONVERTER</h1>
       <p>Convert and download YouTube videos to MP3</p>
       <form id="download-form">
@@ -99,30 +91,16 @@
     </div>
   </header>
 
+  <!-- Spinner and download button -->
   <div class="container text-center">
-    <div class="justify-content-center align-items-center spinner" style="display: none;" id="spinner-container">
-
-      <div class="spinner-border text-primary" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-secondary" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-success" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-danger" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-warning" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-info" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-dark" role="status">
-        <span class="sr-only"></span>
-      </div>
+    <div class="justify-content-center align-items-center spinner" id="spinner-container" style="display: none;">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-warning" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-info" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-dark" role="status"><span class="visually-hidden">Loading...</span></div>
     </div>
     <div class="center-div">
       <button class="btn btn-primary" type="submit" id="download-btn">
@@ -138,34 +116,33 @@
               <th>Duration</th>
             </tr>
           </thead>
-          <tbody id="video-details-table">
-          </tbody>
+          <tbody id="video-details-table"></tbody>
         </table>
       </div>
     </div>
-
     <div id="result"></div>
   </div>
-
 
   <!-- Content Section -->
   <section class="content-section">
     <div class="container">
-      <h2>BEST YOUTUBE TO MP3 CONVERTER</h2>
-      <p>M3YouTube is the best YouTube to MP3 converter and downloader. It's one of the fastest tool for converting
-        YouTube videos to music. It's really easy to use with its super user-friendly interface and is very convenient.
-        The high-quality mp3 music files are accessible by the user within the matter of seconds thanks to the fast
-        conversion speed. You don't even need to download any software or need any account to use our service. Enjoy
-        unlimited conversion of music from YouTube in the best available quality. We will be adding many more formats in
-        the future so stay tuned for that. Try us once and we guarantee you'll be delighted with the quality of our
-        service. M3YouTube is free now and will always be</p>
+      <h2>100% SAFE AND CLEAN</h2>
+      <p>With the rising awareness of device security, people attach great importance to personal data. Our YouTube to
+        MP3 converter is totally clean with no viruses or malware. We ensure that our service is safe to use under
+        intense supervision based on a robust security database.</p>
+      <p>We prioritize your privacy and security, implementing stringent measures to protect your data. Our platform is
+        designed to offer a secure environment for all users, free from any malicious threats. You can trust our service
+        to provide a safe and clean experience every time you use it.</p>
+      <p>Our commitment to security means that we regularly update our systems and conduct thorough checks to maintain
+        the highest standards of safety. Enjoy peace of mind while converting your favorite YouTube videos to MP3 with
+        our 100% safe and clean service.</p>
 
       <div class="how-to">
         <div class="row">
           <div class="col-md-4 step">
             <span class="step-number">1</span>
             <h4>Start</h4>
-            <p>Paste YouTube url or enter keywords into the search box.</p>
+            <p>Paste YouTube URL or enter keywords into the search box.</p>
           </div>
           <div class="col-md-4 step">
             <span class="step-number-2">2</span>
@@ -182,6 +159,8 @@
     </div>
   </section>
 
+
+  <!-- Content Section -->
   <section class="feature-section">
     <div class="container">
       <div class="row feature-row">
@@ -286,17 +265,6 @@
       </ul>
     </div>
   </footer>
-
-
-
-
-  <!-- Spinner for loading feedback -->
-  <div class="spinner">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
-
 
   <!-- Adjusted to use the Bootstrap 5 and ensure JavaScript functionality -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

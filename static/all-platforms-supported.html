@@ -4,41 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  <title>m3youtube - YouTube to MP3 Converter</title>
-  <!-- Bootstrap CSS - Updated to Bootstrap 5 for consistency with your old HTML -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
-    crossorigin="anonymous">
+  <title>m3youtube - All Platforms Supported</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" crossorigin="anonymous">
   <link rel="stylesheet" href="/static/style.css">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon_96.png">
-  <link rel="canonical" href="https://m3youtube.com/many-formats-coming-soon">
+  <link rel="canonical" href="https://m3youtube.com/all-platforms-supported">
   <meta name="msvalidate.01" content="C9C6379A41C3999126D6C247A6142382">
   <meta name="yandex-verification" content="c6d9ff5e1569edb0">
-  <meta name="description"
-    content="Convert YouTube videos to MP3 music files for free with m3youtube. It is the fastest YouTube to MP3 Converter to save high-quality music from YouTube.">
+  <meta name="description" content="Convert YouTube videos to MP3 music files for free with m3youtube. It is the fastest YouTube to MP3 Converter to save high-quality music from YouTube.">
   <meta name="csrf-token" content="YourUniqueTokenHere">
   <link rel="apple-touch-icon" sizes="76x76" href="/static/apple-touch-icon.png">
   <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#333333">
   <link rel="shortcut icon" href="/static/favicon.ico">
   <meta name="theme-color" content="#ffffff">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="m3youtube - YouTube to MP3 Converter">
+  <meta property="og:title" content="m3youtube - All Platforms Supported">
   <meta property="og:description" content="Convert and download YouTube videos to MP3">
   <meta property="og:image" content="/static/og-image.png">
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="m3youtube - YouTube to MP3 Converter">
+  <meta property="twitter:title" content="m3youtube - All Platforms Supported">
   <meta property="twitter:description" content="Convert and download YouTube videos to MP3">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DH7JPPS6K1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-DH7JPPS6K1');
+  </script>
 </head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DH7JPPS6K1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() { dataLayer.push(arguments); }
-  gtag('js', new Date());
-
-  gtag('config', 'G-DH7JPPS6K1');
-</script>
 
 <body>
   <!-- Navigation bar -->
@@ -46,17 +42,10 @@
     <div class="container">
       <a class="navbar-brand" href="/">M3YOUTUBE</a>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/">YouTube Downloader</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Copyright</a>
-        </li>
+        <li class="nav-item"><a class="nav-link" href="/">YouTube Downloader</a></li>
+        <li class="nav-item"><a class="nav-link" href="/">Copyright</a></li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Language
-          </a>
+          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Language</a>
           <div class="dropdown-menu" aria-labelledby="languageDropdown">
             <a class="dropdown-item" href="/en">English</a>
             <a class="dropdown-item" href="/es">Spanish</a>
@@ -72,14 +61,13 @@
 
   <!-- Main header -->
   <header class="main-header">
-    <div class="container">
+    <div class="container text-center">
       <h1>YOUTUBE TO MP3 CONVERTER</h1>
       <p>Convert and download YouTube videos to MP3</p>
       <form id="download-form">
         <div class="search-box row">
           <div class="col-10">
-            <input class="form-control me-2" type="search" placeholder="Enter YouTube video URL" aria-label="Search"
-              id="url-input">
+            <input class="form-control me-2" type="search" placeholder="Enter YouTube video URL" aria-label="Search" id="url-input">
           </div>
           <div class="col-2">
             <button class="btn btn-primary" type="submit" id="convert-btn">Convert</button>
@@ -88,41 +76,24 @@
       </form>
       <div id="DownloadTip" class="download-tip mt-3 col-10">
         <div class="tips">
-          <p class="tos-info"><strong>Tip:</strong> Insert <strong>"m3"</strong> before <strong>"YouTube"</strong> in
-            the URL bar to download mp3 files from YouTube faster.</p>
-          <span class="example-url">e.g: https://www.<span
-              class="highlight">m3</span>youtube.com/watch?v=pRpeEdMmmQ0</span>
+          <p class="tos-info"><strong>Tip:</strong> Insert <strong>"m3"</strong> before <strong>"YouTube"</strong> in the URL bar to download mp3 files from YouTube faster.</p>
+          <span class="example-url">e.g: https://www.<span class="highlight">m3</span>youtube.com/watch?v=pRpeEdMmmQ0</span>
         </div>
       </div>
-      <div class="terms col-10">By using our service you accept our <a href="#">Terms of Service</a> & <a
-          href="#">Privacy Policy</a></div>
+      <div class="terms col-10">By using our service you accept our <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a></div>
     </div>
   </header>
 
+  <!-- Spinner and download button -->
   <div class="container text-center">
-    <div class="justify-content-center align-items-center spinner" style="display: none;" id="spinner-container">
-
-      <div class="spinner-border text-primary" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-secondary" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-success" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-danger" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-warning" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-info" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div class="spinner-border text-dark" role="status">
-        <span class="sr-only"></span>
-      </div>
+    <div class="justify-content-center align-items-center spinner" id="spinner-container" style="display: none;">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-warning" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-info" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="spinner-border text-dark" role="status"><span class="visually-hidden">Loading...</span></div>
     </div>
     <div class="center-div">
       <button class="btn btn-primary" type="submit" id="download-btn">
@@ -138,28 +109,21 @@
               <th>Duration</th>
             </tr>
           </thead>
-          <tbody id="video-details-table">
-          </tbody>
+          <tbody id="video-details-table"></tbody>
         </table>
       </div>
     </div>
-
     <div id="result"></div>
   </div>
-
 
   <!-- Content Section -->
   <section class="content-section">
     <div class="container">
-      <h2>BEST YOUTUBE TO MP3 CONVERTER</h2>
-      <p>M3YouTube is the best YouTube to MP3 converter and downloader. It's one of the fastest tool for converting
-        YouTube videos to music. It's really easy to use with its super user-friendly interface and is very convenient.
-        The high-quality mp3 music files are accessible by the user within the matter of seconds thanks to the fast
-        conversion speed. You don't even need to download any software or need any account to use our service. Enjoy
-        unlimited conversion of music from YouTube in the best available quality. We will be adding many more formats in
-        the future so stay tuned for that. Try us once and we guarantee you'll be delighted with the quality of our
-        service. M3YouTube is free now and will always be</p>
-
+      <h2>ALL PLATFORMS SUPPORTED</h2>
+      <p>We support all device platforms. It’s easy to convert YouTube videos to MP3 files regardless of whether you are using Windows, Mac, Linux, Android, or iPhone. Our service ensures compatibility across various operating systems and devices, making it convenient for users to access our YouTube to MP3 converter from any platform.</p>
+      <p>Whether you're at home on your PC, on the go with your smartphone, or using your tablet, our service is designed to work seamlessly across all these devices. We prioritize a smooth user experience, ensuring that you can easily convert and download MP3 files from YouTube without any hassle.</p>
+      <p>Our cross-platform support means that you don’t have to worry about compatibility issues. Simply open our website on any device and start converting your favorite YouTube videos to high-quality MP3 files. Enjoy the flexibility and convenience of using our service from any platform you prefer.</p>
+      
       <div class="how-to">
         <div class="row">
           <div class="col-md-4 step">
@@ -242,6 +206,9 @@
     </div>
   </section>
 
+  
+
+
   <!-- FAQ Section -->
   <section class="faq-section">
     <div class="container">
@@ -259,17 +226,14 @@
         <dt>Q: How to download YouTube video to Android mobile phone?</dt>
         <dd>A:
           <ol>
-            <li>Access YouTube from your browser or open YouTube app on your Android device; after that, copy the video
-              URL you wish to download.</li>
+            <li>Access YouTube from your browser or open YouTube app on your Android device; after that, copy the video URL you wish to download.</li>
             <li>Paste the URL into the search box. You also can enter keyword to look for the video you wish.</li>
-            <li>Select the format you wish to download then tap "Download". After a few seconds, you can download the
-              file.</li>
+            <li>Select the format you wish to download then tap "Download". After a few seconds, you can download the file.</li>
           </ol>
         </dd>
 
         <dt>Q: Where do the downloaded files get saved?</dt>
-        <dd>A: Files you've downloaded are automatically saved in the Downloads folder or the "download history" section
-          on your device.</dd>
+        <dd>A: Files you've downloaded are automatically saved in the Downloads folder or the "download history" section on your device.</dd>
       </dl>
     </div>
   </section>
@@ -286,17 +250,6 @@
       </ul>
     </div>
   </footer>
-
-
-
-
-  <!-- Spinner for loading feedback -->
-  <div class="spinner">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
-
 
   <!-- Adjusted to use the Bootstrap 5 and ensure JavaScript functionality -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
