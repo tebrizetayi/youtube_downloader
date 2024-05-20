@@ -9,7 +9,10 @@ import (
 
 func NewAPI(y YoutubeConvertorController) http.Handler {
 	router := mux.NewRouter()
+
 	router.Use(redirectToWWW)
+	router.Use(addCacheControl)
+
 	// Create a file server handler that serves static files from the "static" directory
 	fileServer := http.FileServer(http.Dir("static"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
@@ -94,5 +97,12 @@ func redirectToWWW(handler http.Handler) http.Handler {
 			return
 		}
 		handler.ServeHTTP(w, r)
+	})
+}
+
+func addCacheControl(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "max-age=31536000")
+		next.ServeHTTP(w, r)
 	})
 }
