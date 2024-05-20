@@ -10,8 +10,8 @@ import (
 func NewAPI(y YoutubeConvertorController) http.Handler {
 	router := mux.NewRouter()
 
-	router.Use(redirectToWWW)
-	router.Use(addCacheControl)
+	//router.Use(redirectToWWW)
+	//router.Use(addCacheControl)
 
 	// Create a file server handler that serves static files from the "static" directory
 	fileServer := http.FileServer(http.Dir("static"))
