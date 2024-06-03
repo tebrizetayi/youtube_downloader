@@ -1,20 +1,32 @@
 version: '3.8'
+
 services:
   go-app:
-    build: ./.
+    build:
+      context: ./.
+      dockerfile: Dockerfile
     container_name: go_app
     volumes:
       - .:/go/src/app
     ports:
-      - "8080:8080"
-    depends_on:
-      - nginx
-    
+      - "7070:7070"  # Ensure to expose the Go app on a host port if needed
+    networks:
+      - app-network
 
   nginx:
-    image: nginx:latest
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: nginx_reverse_proxy
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - go-app
     ports:
-      - "80:80"
+      - "6060:6060"  # Map the Nginx container's port 80 to host port 80
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
