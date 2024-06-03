@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/go/src/app
     ports:
-      - "7070:7070"  # Ensure to expose the Go app on a host port if needed
+      - "7070:7070"
     networks:
       - app-network
 
@@ -20,6 +20,8 @@ services:
     container_name: nginx_reverse_proxy
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ~/certs/nginx.crt:/etc/nginx/ssl/nginx.crt:ro
+      - ~/certs/nginx.key:/etc/nginx/ssl/nginx.key:ro
     depends_on:
       - go-app
     ports:
