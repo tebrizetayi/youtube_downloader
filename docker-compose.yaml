@@ -23,7 +23,8 @@ services:
     depends_on:
       - go-app
     ports:
-      - "6060:6060"  # Map the Nginx container's port 80 to host port 80
+      - "80:80"
+      - "443:443"
     networks:
       - app-network
 
