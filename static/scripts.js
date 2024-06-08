@@ -1,119 +1,140 @@
 // Initialize Bootstrap dropdown
-var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
 var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
-  return new bootstrap.Dropdown(dropdownToggleEl)
+  return new bootstrap.Dropdown(dropdownToggleEl);
 });
 
+// Elements selection
 const form = document.getElementById('download-form');
 const resultDiv = document.getElementById('result');
 const spinner = document.getElementsByClassName('spinner')[0];
 const videoDetailsDiv = document.getElementById('video-details');
-const videoDetailsDuration = document.getElementById('video-duration');
-const videoDetailsTitle = document.getElementById('video-title');
-const videoDetailstable = document.getElementById('video-details-table');
+const videoDetailsTable = document.getElementById('video-details-table');
 const downloadButton = document.getElementById('download-btn');
 
+// Handle form submission
 form.addEventListener('submit', async (event) => {
-  console.log("begin")
   event.preventDefault();
 
   const urlInput = document.getElementById('url-input');
   const url = urlInput.value.trim();
-  spinner.style.display = 'none';
-  downloadButton.style.display = 'none';
-
-  resultDiv.innerHTML = "";
-  videoDetailstable.innerHTML = "";
-  videoDetailsDiv.style.display = 'none';
+  clearUI(); // Clear the UI for the new request
 
   if (!url) {
     resultDiv.innerHTML = '<p>Please enter a valid YouTube URL.</p>';
     return;
   }
 
-  // Show the loading spinner
-  spinner.style.display = 'flex';
-
-  const videoDetailsResponse = await fetch('/info?url=' + encodeURIComponent(url));
-  const videoDetails = await videoDetailsResponse.json();
-  const videoTitle = videoDetails.title;
-  const duration = videoDetails.duration;
-
-  videoDetailsDiv.style.display = 'flex';
-  const newRow = document.createElement('tr');
-  newRow.innerHTML = `
-  <td>${videoTitle}</td>
-  <td>${duration}</td>
-`;
-  videoDetailstable.appendChild(newRow);
-
-  // Request the download and get the download token
-  const tokenResponse = await fetch('/download?url=' + encodeURIComponent(url));
-  if (tokenResponse.ok) {
-    const tokenData = await tokenResponse.json();
-    const downloadToken = tokenData.token;
-    const health_check_period = tokenData.health_check_period;
-    // Poll the backend for download completion
-    const checkDownload = async () => {
-      const downloadResponse = await fetch('/progress?token=' + encodeURIComponent(downloadToken));
-      if (downloadResponse.status === 202) {
-        setTimeout(checkDownload, health_check_period); // Poll every 5 seconds
-      } else if (downloadResponse.status === 200) {
-        // Download the file when the progress is 100%
-        const fileResponse = await fetch('/downloadFile?token=' + encodeURIComponent(downloadToken));
-        spinner.style.display = 'none';
-        if (fileResponse.ok) {
-          const blob = await fileResponse.blob();
-          const downloadLink = document.createElement('a');
-          downloadLink.href = URL.createObjectURL(blob);
-          downloadLink.download = '/downloadFile?token=' + encodeURIComponent(downloadToken);
-
-          // Show the download button
-          const downloadButton = document.getElementById('download-btn');
-          downloadButton.style.display = 'inline-block';
-          downloadButton.onclick = () => {
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            resultDiv.innerHTML = '<p>Download is completed</p>';
-          };
-
-          // Hide the spinner
-          spinner.style.display = 'none';
-          resultDiv.innerHTML = '<p>Download is ready:</p>';
-
-        } else {
-          const errorMessage = await fileResponse.text();
-          resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
-        }
-      }
-    };
-    resultDiv.innerHTML = '<p>Downloading ...</p>';
-    checkDownload();
-  } else {
-    // Handle the error returned by the /download endpoint
-    const errorMessage = await tokenResponse.text();
-    spinner.style.display = 'none';
-    resultDiv.innerHTML = '<p>Error: ' + errorMessage + '</p>';
+  try {
+    await fetchVideoDetails(url);
+    const downloadToken = await initiateDownload(url);
+    await pollDownload(downloadToken);
+  } catch (error) {
+    console.error('Error:', error);
+    displayError(error.message || 'An unexpected error occurred');
   }
-
-  // ... (rest of the JavaScript code)
-
 });
 
-// Read the URL query string
+// Fetch video details and update UI
+async function fetchVideoDetails(url) {
+  spinner.style.display = 'flex';
+  const response = await fetch('/info?url=' + encodeURIComponent(url));
+  if (!response.ok) throw new Error('Failed to fetch video details');
+
+  const videoDetails = await response.json();
+  displayVideoDetails(videoDetails.title, videoDetails.duration);
+}
+
+// Initiate download and return token
+async function initiateDownload(url) {
+  const response = await fetch('/download?url=' + encodeURIComponent(url));
+  if (!response.ok) {
+    const errorMessage = await response.text();
+    throw new Error(errorMessage);
+  }
+
+  const data = await response.json();
+  return data.token;
+}
+
+// Poll the server for download progress and handle download
+async function pollDownload(downloadToken) {
+  resultDiv.innerHTML = '<p>Downloading...</p>';
+  const checkDownload = async () => {
+    const response = await fetch('/progress?token=' + encodeURIComponent(downloadToken));
+
+    if (response.status === 202) {
+      setTimeout(checkDownload, 5000); // Poll every 5 seconds
+    } else if (response.status === 200) {
+      await downloadFile(downloadToken);
+    } else {
+      throw new Error('Download failed');
+    }
+  };
+
+  checkDownload();
+}
+
+// Perform the actual file download
+async function downloadFile(downloadToken) {
+  const response = await fetch('/downloadFile?token=' + encodeURIComponent(downloadToken));
+  spinner.style.display = 'none';
+
+  if (!response.ok) {
+    const errorMessage = await response.text();
+    throw new Error(errorMessage);
+  }
+
+  const blob = await response.blob();
+  createDownloadLink(blob);
+}
+
+// Create and handle download link
+function createDownloadLink(blob) {
+  const downloadLink = document.createElement('a');
+  downloadLink.href = URL.createObjectURL(blob);
+  downloadLink.download = 'downloadedFile'; // Set your desired file name
+
+  const downloadButton = document.getElementById('download-btn');
+  downloadButton.style.display = 'inline-block';
+  downloadButton.onclick = () => {
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    resultDiv.innerHTML = '<p>Download completed.</p>';
+  };
+
+  resultDiv.innerHTML = '<p>Download is ready.</p>';
+  spinner.style.display = 'none';
+}
+
+// Display video details on the UI
+function displayVideoDetails(title, duration) {
+  videoDetailsDiv.style.display = 'flex';
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `<td>${title}</td><td>${duration}</td>`;
+  videoDetailsTable.appendChild(newRow);
+}
+
+// Display error messages
+function displayError(message) {
+  resultDiv.innerHTML = `<p>Error: ${message}</p>`;
+  spinner.style.display = 'none';
+}
+
+// Clear UI elements
+function clearUI() {
+  spinner.style.display = 'none';
+  downloadButton.style.display = 'none';
+  resultDiv.innerHTML = "";
+  videoDetailsTable.innerHTML = "";
+  videoDetailsDiv.style.display = 'none';
+}
+
+// Read URL parameters and auto-submit form if applicable
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-
-// Define an async function for form submission
-async function submitForm() {
-  const event = new Event('submit');
-  await form.dispatchEvent(event);
-}
-
-// Check if the watch?v= parameter exists
 if (urlParams.has('v')) {
-  document.getElementById('url-input').value = 'https://www.youtube.com/watch?v=' + urlParams.get('v');
-  submitForm();
+  document.getElementById('url-input').value = `https://www.youtube.com/watch?v=${urlParams.get('v')}`;
+  form.dispatchEvent(new Event('submit'));
 }
-
