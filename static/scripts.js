@@ -60,19 +60,32 @@ async function initiateDownload(url) {
 // Poll the server for download progress and handle download
 async function pollDownload(downloadToken) {
   resultDiv.innerHTML = '<p>Downloading...</p>';
-  const checkDownload = async () => {
-    const response = await fetch('/progress?token=' + encodeURIComponent(downloadToken));
-
-    if (response.status === 202) {
-      setTimeout(checkDownload, 5000); // Poll every 5 seconds
-    } else if (response.status === 200) {
-      await downloadFile(downloadToken);
-    } else {
-      throw new Error('Download failed');
+  async function checkDownload(downloadToken) {
+    try {
+      const response = await fetch('/progress?token=' + encodeURIComponent(downloadToken), {
+        method: 'GET', // or 'POST' depending on your server setup
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'same-origin' // or 'include' if requests are cross-origin
+      });
+  
+      if (response.status === 202) {
+        setTimeout(checkDownload, 5000, downloadToken); // Make sure to pass the downloadToken again
+      } else if (response.status === 200) {
+        console.log('Download ready.');
+        // Further actions here
+      } else {
+        throw new Error(`Failed to fetch with status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error during fetch:', error.message);
     }
-  };
+  }
+  
 
-  checkDownload();
+  checkDownload(downloadToken);
 }
 
 // Perform the actual file download
