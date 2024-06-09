@@ -76,6 +76,7 @@ async function pollDownload(downloadToken) {
       } else if (response.status === 200) {
         console.log('Download ready.');
         // Further actions here
+        await downloadFile(downloadToken);
       } else {
         throw new Error(`Failed to fetch with status: ${response.status}`);
       }
