@@ -14,7 +14,7 @@ func TestDownloader_Success(t *testing.T) {
 	}{
 		{
 			err: nil,
-			URL: "https://www.youtube.com/watch?v=8aw6lLu-iBo",
+			URL: "https://www.youtube.com/watch?v=RtBy-7aGiMo",
 		},
 	}
 	downloader := NewDownloader()
@@ -25,7 +25,7 @@ func TestDownloader_Success(t *testing.T) {
 			return
 		}
 
-		if err := os.Remove(fileName + ".mp4"); err != nil {
+		if err := os.Remove(fileName); err != nil {
 			t.Error("error during removing downloaded video", err)
 			return
 		}

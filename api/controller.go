@@ -148,10 +148,11 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 func (c *YoutubeConvertorController) ProgressHandler(w http.ResponseWriter, r *http.Request) {
 	token := r.URL.Query().Get("token")
 	if isDownloadCompleted, err := c.downloadManager.GetProgress(token); err == nil {
-		w.Header().Set("Content-Type", "text/plain")
 		if !isDownloadCompleted {
+			w.Header().Set("Content-Type", "text/plain")
 			w.WriteHeader(http.StatusAccepted) // Set status code to 202 when the download is still in progress
 		} else {
+			w.Header().Set("Content-Type", "audio/mpeg")
 			w.WriteHeader(http.StatusOK)
 		}
 	} else {
