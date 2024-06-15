@@ -23,7 +23,7 @@ services:
     depends_on:
       - go-app
     ports:
-      - "80:80"
+      - "6060:6060"
     networks:
       - app-network
 
