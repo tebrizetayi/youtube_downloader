@@ -2,7 +2,7 @@
 FROM golang:latest
 
 # Create and set the working directory
-RUN mkdir /go/src/app
+#RUN mkdir /go/src/app
 WORKDIR /go/src/app
 
 # Install ffmpeg and setup Python virtual environment
@@ -16,7 +16,7 @@ RUN . /opt/venv/bin/activate && pip install yt-dlp
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy the current directory contents into the container
-COPY . /go/src/app
+COPY . .
 
 # Install CompileDaemon for live reloading in development
 RUN go install github.com/githubnemo/CompileDaemon@latest

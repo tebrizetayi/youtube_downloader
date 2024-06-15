@@ -18,11 +18,11 @@ import (
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "7070"
-	}
-	port = ":" + port
+	//port := os.Getenv("PORT")
+	//if port == "" {
+	//	port = "5050"
+	//}
+	port := ":7070"
 
 	// Make a channel to listen for an interrupt or terminate signal from the OS.
 	// Use a buffered channel because the signal package requires it.
