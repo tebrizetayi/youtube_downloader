@@ -2,7 +2,7 @@
 FROM golang:latest
 
 # Create and set the working directory
-RUN mkdir /go/src/app
+#RUN mkdir /go/src/app
 WORKDIR /go/src/app
 
 # Install ffmpeg and setup Python virtual environment
