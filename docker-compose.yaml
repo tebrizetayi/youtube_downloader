@@ -6,10 +6,10 @@ services:
       context: ./.
       dockerfile: Dockerfile
     container_name: go_app
-    #volumes:
-    #  - .:/go/src/app
+    volumes:
+      - .:/go/src/app
     ports:
-      - "6060:6060"
+      - "5050:5050"
     networks:
       - app-network
 

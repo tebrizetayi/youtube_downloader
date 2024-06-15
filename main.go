@@ -20,7 +20,7 @@ import (
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "6060"
+		port = "5050"
 	}
 	port = ":" + port
 
