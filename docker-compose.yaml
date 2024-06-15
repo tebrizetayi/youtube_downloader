@@ -1,40 +1,32 @@
+version: '3.8'
+
 services:
   go-app:
     build:
       context: ./.
       dockerfile: Dockerfile
-    container_name: go-app-j4o4w8s-122227468465
+    container_name: go_app
     volumes:
-      - '/data/coolify/applications/j4o4w8s:/go/src/app'
+      - .:/go/src/app
     ports:
-      - '7070:7070'
+      - "7070:7070"
     networks:
-      app-network: null
-      j4o4w8s: null
-    labels:
-      - traefik.enable=true
-      - traefik.http.middlewares.gzip.compress=true
-      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
-      - traefik.http.routers.http-0-fcwg0cs.entryPoints=http
-      - traefik.http.routers.http-0-fcwg0cs.middlewares=gzip
-      - 'traefik.http.routers.http-0-fcwg0cs.rule=Host(`hssww4k.95.216.219.89.sslip.io`) && PathPrefix(`/`)'
-      - 'caddy_0.encode=zstd gzip'
-      - 'caddy_0.handle_path.0_reverse_proxy={{upstreams}}'
-      - 'caddy_0.handle_path=/*'
-      - caddy_0.header=-Server
-      - 'caddy_0.try_files={path} /index.html /index.php'
-      - 'caddy_0=http://hssww4k.95.216.219.89.sslip.io'
-      - caddy_ingress_network=j4o4w8s
-      - coolify.managed=true
-      - coolify.version=4.0.0-beta.297
-      - coolify.applicationId=1
-      - coolify.type=application
-      - coolify.name=go-app-j4o4w8s-122227468465
-      - coolify.pullRequestId=0
-    restart: unless-stopped
-volumes: {  }
+      - app-network
+
+#  nginx:
+#    build: 
+#      context: ./nginx
+#      dockerfile: Dockerfile
+#    container_name: nginx_reverse_proxy
+#    volumes:
+#      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+#    depends_on:
+#      - go-app
+#    ports:
+#      - "6060:6060"
+#    networks:
+#      - app-network
+
 networks:
-  app-network: null
-  j4o4w8s:
-    name: j4o4w8s
-    external: true
+  app-network:
+    driver: bridge
