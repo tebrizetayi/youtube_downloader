@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/go/src/app
     ports:
-      - "7070:7070"
+      - "6060:6060"
     networks:
       - app-network
 
