@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: go_app
     volumes:
-      - .:/go/src/app
+      - .:/app
     ports:
       - "5050:5050"
     networks:
