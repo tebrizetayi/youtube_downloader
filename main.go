@@ -20,11 +20,11 @@ import (
 )
 
 func main() {
-	//port := os.Getenv("PORT")
-	//if port == "" {
-	//	port = "5050"
-	//}
-	port := ":7070"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "7070"
+	}
+	port = ":" + port
 
 	logger, err := zap.NewProduction()
 	if err != nil {
