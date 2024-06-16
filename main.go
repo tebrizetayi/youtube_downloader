@@ -42,7 +42,7 @@ func main() {
 	serverErrors := make(chan error, 1)
 
 	// Services
-	downloader := downloader.NewDownloader()
+	downloader := downloader.NewDownloader(logger)
 	convertor := convertor.NewConverter()
 	mp3downloader := mp3downloader.NewMp3downloader(&downloader, &convertor, logger)
 	youtubevideoprofiler := youtubevideoprofiler.NewVideoProfiler(logger)
