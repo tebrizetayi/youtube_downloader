@@ -21,8 +21,10 @@ type Client struct {
 	logger *zap.Logger
 }
 
-func NewDownloader() Client {
-	return Client{}
+func NewDownloader(logger *zap.Logger) Client {
+	return Client{
+		logger: logger,
+	}
 }
 
 func (c *Client) Download(ctx context.Context, url string) (string, error) {
