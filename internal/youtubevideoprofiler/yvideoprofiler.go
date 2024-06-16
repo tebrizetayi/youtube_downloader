@@ -3,10 +3,9 @@ package youtubevideoprofiler
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log"
 
 	"github.com/kkdai/youtube/v2"
+	"go.uber.org/zap"
 )
 
 var (
@@ -20,10 +19,13 @@ type VideoProfiler interface {
 }
 
 type ProfilerClient struct {
+	logger *zap.Logger
 }
 
-func NewVideoProfiler() ProfilerClient {
-	return ProfilerClient{}
+func NewVideoProfiler(logger *zap.Logger) ProfilerClient {
+	return ProfilerClient{
+		logger: logger,
+	}
 }
 
 func (c *ProfilerClient) GetVideoInfo(ctx context.Context, videoID string) (*youtube.Video, error) {
@@ -42,8 +44,6 @@ func (c *ProfilerClient) CheckVideoDuration(ctx context.Context, videoID string,
 	if err != nil {
 		return false, err
 	}
-	fmt.Println(video.Duration)
-	log.Println(video.Duration.Seconds())
 	if video.Duration.Seconds() > maxDuration {
 		return false, nil
 	}
@@ -54,7 +54,7 @@ func (c *ProfilerClient) CheckVideoDuration(ctx context.Context, videoID string,
 func (c *ProfilerClient) IsVideoAvailable(ctx context.Context, videoID string) (bool, error) {
 	_, err := c.GetVideoInfo(ctx, videoID)
 	if err != nil {
-		log.Println(err)
+		c.logger.Error("error ", zap.Error(err))
 		return false, ErrVideoNotFound
 	}
 	return true, nil

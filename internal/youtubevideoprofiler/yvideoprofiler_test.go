@@ -3,6 +3,8 @@ package youtubevideoprofiler
 import (
 	"context"
 	"testing"
+
+	"go.uber.org/zap"
 )
 
 func TestYVideoProfiler_Success(t *testing.T) {
@@ -17,7 +19,11 @@ func TestYVideoProfiler_Success(t *testing.T) {
 			URL: "https://www.youtube.com/watch?v=8aw6lLu-iBo",
 		},
 	}
-	yvideoProfiler := NewVideoProfiler()
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+	yvideoProfiler := NewVideoProfiler(logger)
 	for _, test := range testTable {
 		_, err := yvideoProfiler.GetVideoInfo(ctx, test.URL)
 		if test.err != err {
@@ -48,7 +54,11 @@ func TestYVideoProfiler_Duration(t *testing.T) {
 			err:              nil,
 		},
 	}
-	yvideoProfiler := NewVideoProfiler()
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+	yvideoProfiler := NewVideoProfiler(logger)
 	for _, test := range testTable {
 		isWithinDuration, err := yvideoProfiler.CheckVideoDuration(ctx, test.URL, test.duration)
 		if test.err != err || test.isWithinDuration != isWithinDuration {
@@ -77,7 +87,11 @@ func TestYVideoProfiler_IsValid(t *testing.T) {
 			err:    ErrVideoNotFound,
 		},
 	}
-	yvideoProfiler := NewVideoProfiler()
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+	yvideoProfiler := NewVideoProfiler(logger)
 	for _, test := range testTable {
 		result, err := yvideoProfiler.IsVideoAvailable(ctx, test.URL)
 		if test.err != err || test.result != result {

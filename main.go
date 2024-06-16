@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
-	"log"
+
+	"go.uber.org/zap"
+
 	"net/http"
 	"os"
 	"os/signal"
@@ -24,6 +26,12 @@ func main() {
 	//}
 	port := ":7070"
 
+	logger, err := zap.NewProduction()
+	if err != nil {
+		panic(err)
+	}
+	defer logger.Sync()
+
 	// Make a channel to listen for an interrupt or terminate signal from the OS.
 	// Use a buffered channel because the signal package requires it.
 	shutdown := make(chan os.Signal, 1)
@@ -36,9 +44,9 @@ func main() {
 	// Services
 	downloader := downloader.NewDownloader()
 	convertor := convertor.NewConverter()
-	mp3downloader := mp3downloader.NewMp3downloader(&downloader, &convertor)
-	youtubevideoprofiler := youtubevideoprofiler.NewVideoProfiler()
-	controller := api.NewYoutubeController(&mp3downloader, youtubevideoprofiler)
+	mp3downloader := mp3downloader.NewMp3downloader(&downloader, &convertor, logger)
+	youtubevideoprofiler := youtubevideoprofiler.NewVideoProfiler(logger)
+	controller := api.NewYoutubeController(&mp3downloader, youtubevideoprofiler, logger)
 
 	// Start the HTTP service listening for requests.
 	api := http.Server{
@@ -48,7 +56,8 @@ func main() {
 	}
 
 	go func() {
-		log.Printf("main : API Listening %s", port)
+		logger.Info("API Listening port", zap.String("port", port))
+
 		serverErrors <- api.ListenAndServe()
 	}()
 
@@ -62,12 +71,10 @@ func main() {
 		case <-ticker.C: // Wait for the next tick
 			fmt.Println("Performing scheduled file check and deletion...")
 			filepath.Walk(root, deleteOldFiles)
-
 		case err := <-serverErrors:
-			log.Fatalf("main : Error starting server: %+v", err)
-
+			logger.Fatal("error starting server", zap.Error(err))
 		case sig := <-shutdown:
-			log.Printf("main : %v : Start shutdown..", sig)
+			logger.Info("shut down", zap.Any("sig", sig))
 		}
 	}
 }
@@ -80,8 +87,7 @@ func ConvertIntToString(i int) string {
 func deleteOldFiles(path string, fileInfo os.FileInfo, err error) error {
 	duration := 10 * time.Minute
 	if err != nil {
-		log.Println(err) // print any error but continue
-		return nil
+		return err
 	}
 
 	// Check if the file is an mp3 or mp4
@@ -89,17 +95,16 @@ func deleteOldFiles(path string, fileInfo os.FileInfo, err error) error {
 		// Get the creation time of the file
 		stat, err := os.Stat(path)
 		if err != nil {
-			log.Println(err)
-			return nil
+			return err
 		}
 
 		// Calculate time difference
 		if time.Since(stat.ModTime()) > duration {
 			// If the file is older than 15 minutes, delete it
-			log.Println("Deleting:", path)
+			//logger.Info("Deleting old files", zap.String("path", path))
 			err := os.Remove(path)
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 		}
 	}

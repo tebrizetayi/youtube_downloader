@@ -2,7 +2,6 @@ package convertor
 
 import (
 	"context"
-	"log"
 	"os"
 	"os/exec"
 )
@@ -18,12 +17,6 @@ func NewConverter() Client {
 }
 
 func (c *Client) ConvertMp4ToMp3(ctx context.Context, fileName string, outputFilename string) ([]byte, error) {
-	// Convert video to MP3
-
-	log.Println("Converting file to mp3", fileName)
-
-	//mp4File := fmt.Sprintf("%s.mp4", fileName)
-
 	cmd := exec.CommandContext(ctx, "ffmpeg", "-i", fileName, "-vn", "-acodec", "libmp3lame", "-ac", "2",
 		"-ab", "256k", "-ar", "44100", outputFilename)
 
@@ -47,7 +40,5 @@ func (c *Client) ConvertMp4ToMp3(ctx context.Context, fileName string, outputFil
 	if err != nil {
 		return nil, err
 	}
-
-	log.Println("Converted file to mp3", outputFilename)
 	return mp3Bytes, nil
 }

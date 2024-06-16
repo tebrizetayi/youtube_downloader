@@ -106,7 +106,9 @@ async function downloadFile(downloadToken) {
 // Create and handle download link
 function createDownloadLink(blob) {
   const downloadLink = document.createElement('a');
+  
   downloadLink.href = URL.createObjectURL(blob);
+  console.log("downloadLink.href = URL.createObjectURL(blob);")
   downloadLink.download = 'downloadedFile'; // Set your desired file name
 
   const downloadButton = document.getElementById('download-btn');

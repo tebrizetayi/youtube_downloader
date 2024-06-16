@@ -3,10 +3,10 @@ package downloader
 import (
 	"context"
 	"fmt"
-	"log"
 	"os/exec"
 	"time"
-	//"github.com/rylio/ytdl"
+
+	"go.uber.org/zap"
 )
 
 var (
@@ -18,6 +18,7 @@ type Downloader interface {
 }
 
 type Client struct {
+	logger *zap.Logger
 }
 
 func NewDownloader() Client {
@@ -32,7 +33,7 @@ func (c *Client) Download(ctx context.Context, url string) (string, error) {
 	// Correctly separate the '-f' and its argument without single quotes around the format specifier
 	//cmd := exec.CommandContext(ctx, "youtube-dl", "-f", "best[ext=mp4]", "-o", fileName, url)
 	cmd := exec.CommandContext(ctx, "yt-dlp", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best", "-o", fileName, url)
-	log.Println("Executing command:", cmd.Args) // Logging the command arguments for debugging
+	c.logger.Info("executing command", zap.Any("cmd", cmd.Args))
 
 	// Start the command
 	err := cmd.Start()
@@ -45,7 +46,6 @@ func (c *Client) Download(ctx context.Context, url string) (string, error) {
 	case <-ctx.Done():
 		// If context is done, attempt to kill the process
 		if killErr := cmd.Process.Kill(); killErr != nil {
-			log.Println("Error killing process:", killErr)
 			return "", fmt.Errorf("failed to kill process: %w", killErr)
 		}
 		return "", ctx.Err()
