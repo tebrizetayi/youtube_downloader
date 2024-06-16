@@ -25,7 +25,9 @@ RUN go install github.com/githubnemo/CompileDaemon@latest
 RUN go mod download
 
 # Expose the application port
-EXPOSE 7070
+ARG PORT=7070
+ENV PORT $PORT
+EXPOSE $PORT
 
 # Set the entry point to use CompileDaemon for live reloading
 ENTRYPOINT CompileDaemon --build="go build -buildvcs=false -o main ./" --command=./main
