@@ -90,7 +90,6 @@ func NewAPI(y YoutubeConvertorController) http.Handler {
 
 func redirectToWWW(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		//log.Printf("Host is %s\n", r)
 		host := r.Host
 		if strings.HasPrefix(host, "m.m3youtube.com") {
 			http.Redirect(w, r, "https://www.m3youtube.com"+r.URL.String(), http.StatusMovedPermanently)

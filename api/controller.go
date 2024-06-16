@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net"
 	"strings"
 
@@ -15,21 +14,26 @@ import (
 	"time"
 	"youtube_download/internal/mp3downloader"
 	"youtube_download/internal/youtubevideoprofiler"
+
+	"go.uber.org/zap"
 )
 
 type YoutubeConvertorController struct {
 	mp3downloader.Mp3downloader
 	YVideoprofiler  youtubevideoprofiler.ProfilerClient
 	downloadManager *DownloadManager
+	Logger          *zap.Logger
 }
 
 func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader,
 	youtubevideoprofiler youtubevideoprofiler.ProfilerClient,
+	logger *zap.Logger,
 ) YoutubeConvertorController {
 	return YoutubeConvertorController{
 		mp3Downloader,
 		youtubevideoprofiler,
 		NewDownloadManager(),
+		logger,
 	}
 }
 
@@ -40,10 +44,7 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 		http.Error(w, "Error getting IP", http.StatusBadRequest)
 		return
 	}
-	log.Printf("Download mp3 request received from Ip:%s\n", ip)
-
-	referer := r.Referer()
-	log.Printf("Referer: %s", referer)
+	c.Logger.Info("Download mp3 request", zap.String("IP", ip), zap.String("referer", r.Referer()))
 	// Open the file to be downloaded
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
@@ -53,7 +54,7 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 		return
 	}
 	url := r.FormValue("url")
-	log.Println("Downloading:", url)
+	c.Logger.Info("Download mp3 request", zap.String("url", ip))
 
 	// Generate a unique download token
 	downloadToken := c.GenerateHash(url)
@@ -123,7 +124,7 @@ func (c *YoutubeConvertorController) DownloadMp3(w http.ResponseWriter, r *http.
 		if downloadProgressToken, ok := c.downloadManager.progress[downloadToken]; ok {
 			downloadProgressToken.isDownloadCompleted = true
 		} else {
-			log.Println("Download progress could not be found....")
+			c.Logger.Info("Download progress could not be found....")
 		}
 	}()
 
@@ -163,7 +164,7 @@ func (c *YoutubeConvertorController) ProgressHandler(w http.ResponseWriter, r *h
 // DownloadResultHandler to get the completed file
 func (c *YoutubeConvertorController) DownloadResultHandler(w http.ResponseWriter, r *http.Request) {
 	token := r.URL.Query().Get("token")
-	log.Println("Token from donwload", token)
+	c.Logger.Info("Token from donwload", zap.String("token", token))
 	if result, err := c.downloadManager.GetResult(token); err == nil {
 		// Set the response header to indicate the file download
 		w.WriteHeader(http.StatusOK)
@@ -223,9 +224,8 @@ func (c *YoutubeConvertorController) ConvertMp3Async(ctx context.Context, url st
 	go func() {
 		// Call DownloadMp3
 		mp3File, _, err := c.Mp3downloader.DownloadMp3(ctx, url)
-
 		if err != nil {
-			log.Println("Error in DownloadMp3:", err)
+			c.Logger.Error("error in downloading mp3", zap.Error(err))
 		}
 		// Send the result to result channel
 		res := convertMp3Result{
@@ -251,7 +251,7 @@ func (c *YoutubeConvertorController) waitForResult(ctx context.Context, result c
 				if time.Since(lastCheck) > 6*time.Second {
 					err := c.downloadManager.CancelDownload(token)
 					if err != nil {
-						log.Println("Error in cancel download", err)
+						c.Logger.Error("error in cancel download", zap.Error(err))
 					}
 					return nil
 				}
@@ -293,8 +293,7 @@ func (c *YoutubeConvertorController) RedirectHandler(w http.ResponseWriter, r *h
 		return
 	}
 	url := r.FormValue("url")
-	log.Println("Downloading:", url)
-
+	c.Logger.Info("Downloading url", zap.String("url", url))
 	// Generate a unique download token
 	downloadToken := url
 	c.downloadManager.progress[downloadToken] = &DownloadProgress{
@@ -343,7 +342,7 @@ func (c *YoutubeConvertorController) RedirectHandler(w http.ResponseWriter, r *h
 		if downloadProgressToken, ok := c.downloadManager.progress[downloadToken]; ok {
 			downloadProgressToken.isDownloadCompleted = true
 		} else {
-			log.Println("Download progress could not be found....")
+			c.Logger.Info("download progress could not be found....")
 		}
 	}()
 
@@ -371,9 +370,7 @@ func (c *YoutubeConvertorController) WatchHandler(w http.ResponseWriter, r *http
 
 	// Extract watch?v= parameter from the URL
 	videoParam := r.URL.Query().Get("v")
-	log.Println(videoParam)
 	if videoParam != "" {
-
 		r.PostForm = url.Values{}
 		r.PostForm.Set("url", videoParam)
 	}
@@ -389,7 +386,7 @@ func (c *YoutubeConvertorController) WatchHandler(w http.ResponseWriter, r *http
 		return
 	}
 
-	log.Println("Downloading:", url)
+	c.Logger.Info("downloading", zap.String("url", url))
 
 	// Replace JSON response with HTTP redirection
 	http.Redirect(w, r, fmt.Sprintf("?v=%s", url), http.StatusSeeOther)
