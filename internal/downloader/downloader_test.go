@@ -4,6 +4,8 @@ import (
 	"context"
 	"os"
 	"testing"
+
+	"go.uber.org/zap"
 )
 
 func TestDownloader_Success(t *testing.T) {
@@ -17,7 +19,11 @@ func TestDownloader_Success(t *testing.T) {
 			URL: "https://www.youtube.com/watch?v=RtBy-7aGiMo",
 		},
 	}
-	downloader := NewDownloader()
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+	downloader := NewDownloader(logger)
 	for _, test := range testTable {
 		fileName, err := downloader.Download(ctx, test.URL)
 		if test.err != err {
@@ -72,6 +78,7 @@ func TestYoutubeDownload(t *testing.T) {
 
 */
 
+/*
 func BenchmarkYoutubeDownload(b *testing.B) {
 	b.Skip()
 	ctx := context.Background()
@@ -89,3 +96,4 @@ func BenchmarkYoutubeDownload(b *testing.B) {
 		}
 	}
 }
+*/

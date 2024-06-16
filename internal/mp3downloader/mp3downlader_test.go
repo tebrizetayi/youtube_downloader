@@ -23,12 +23,15 @@ func TestMp3Downloader_Success(t *testing.T) {
 			URL: "https://www.youtube.com/watch?v=8aw6lLu-iBo",
 		},
 	}
-	downloader := downloader.NewDownloader()
-	convertor := convertor.NewConverter()
+
 	logger, err := zap.NewDevelopment()
 	if err != nil {
 		panic(err)
 	}
+
+	downloader := downloader.NewDownloader(logger)
+	convertor := convertor.NewConverter()
+
 	mp3downloader := NewMp3downloader(&downloader, &convertor, logger)
 	for _, test := range testTable {
 		_, mp3Filename, err := mp3downloader.DownloadMp3(ctx, test.URL)

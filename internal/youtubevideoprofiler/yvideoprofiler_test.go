@@ -91,6 +91,7 @@ func TestYVideoProfiler_IsValid(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	defer logger.Sync()
 	yvideoProfiler := NewVideoProfiler(logger)
 	for _, test := range testTable {
 		result, err := yvideoProfiler.IsVideoAvailable(ctx, test.URL)
