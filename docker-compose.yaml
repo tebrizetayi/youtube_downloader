@@ -5,11 +5,15 @@ services:
     build:
       context: ./.
       dockerfile: Dockerfile
+      args:
+        PORT: ${PORT:-7070}  # Default to 7070 if not specified
     container_name: go_app
     volumes:
       - .:/app
     ports:
-      - "7070:7070"
+      - "${PORT:-7070}:${PORT:-7070}"
+    environment:
+      - PORT=${PORT:-7070}
     networks:
       - app-network
 
