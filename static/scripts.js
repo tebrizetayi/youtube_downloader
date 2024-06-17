@@ -61,7 +61,6 @@ async function initiateDownload(url) {
 async function pollDownload(downloadToken) {
   resultDiv.innerHTML = '<p>Downloading...</p>';
   async function checkDownload(downloadToken) {
-    try {
       const response = await fetch('/progress?token=' + encodeURIComponent(downloadToken), {
         method: 'GET', // or 'POST' depending on your server setup
         headers: {
@@ -80,36 +79,61 @@ async function pollDownload(downloadToken) {
       } else {
         throw new Error(`Failed to fetch with status: ${response.status}`);
       }
-    } catch (error) {
-      console.error('Error during fetch:', error.message);
-    }
   }
   
 
   checkDownload(downloadToken);
 }
 
-// Perform the actual file download
 async function downloadFile(downloadToken) {
   const response = await fetch('/downloadFile?token=' + encodeURIComponent(downloadToken));
-  spinner.style.display = 'none';
+  spinner.style.display = 'none'; // Assuming 'spinner' is a pre-defined element for loading indication
 
   if (!response.ok) {
     const errorMessage = await response.text();
     throw new Error(errorMessage);
   }
 
-  const blob = await response.blob();
+  // Read chunks from the response stream
+  const reader = response.body.getReader();
+  let chunks = [];
+  let totalLength = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      totalLength += value.length;
+    }
+  } catch (error) {
+    console.error('Error while reading the stream:', error);
+    throw new Error('Failed to read the stream.');
+  }
+
+  // Combine the chunks into a single Uint8Array
+  let uint8Array = new Uint8Array(totalLength);
+  let position = 0;
+  for (let chunk of chunks) {
+    uint8Array.set(chunk, position);
+    position += chunk.length;
+  }
+
+  // Create a blob from the Uint8Array
+  const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
   createDownloadLink(blob);
 }
+
+
 
 // Create and handle download link
 function createDownloadLink(blob) {
   const downloadLink = document.createElement('a');
   
   downloadLink.href = URL.createObjectURL(blob);
+  console.log(downloadLink.href)
   console.log("downloadLink.href = URL.createObjectURL(blob);")
-  downloadLink.download = 'downloadedFile'; // Set your desired file name
+  downloadLink.download = 'downloadedFile'+ Date.now(); // Set your desired file name
 
   const downloadButton = document.getElementById('download-btn');
   downloadButton.style.display = 'inline-block';
