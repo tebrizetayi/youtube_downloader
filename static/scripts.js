@@ -133,7 +133,7 @@ function createDownloadLink(blob) {
   downloadLink.href = URL.createObjectURL(blob);
   console.log(downloadLink.href)
   console.log("downloadLink.href = URL.createObjectURL(blob);")
-  downloadLink.download = 'downloadedFile'+ Date.now(); // Set your desired file name
+  downloadLink.download = 'downloadedFile'+ Date.now()+".mp3"; // Set your desired file name
 
   const downloadButton = document.getElementById('download-btn');
   downloadButton.style.display = 'inline-block';
