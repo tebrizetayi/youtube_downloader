@@ -14,7 +14,6 @@ import (
 	"time"
 	"youtube_download/api"
 	"youtube_download/internal/convertor"
-	"youtube_download/internal/downloader"
 	"youtube_download/internal/mp3downloader"
 	"youtube_download/internal/youtubevideoprofiler"
 )
@@ -42,9 +41,8 @@ func main() {
 	serverErrors := make(chan error, 1)
 
 	// Services
-	downloader := downloader.NewDownloader(logger)
 	convertor := convertor.NewConverter()
-	mp3downloader := mp3downloader.NewMp3downloader(&downloader, &convertor, logger)
+	mp3downloader := mp3downloader.NewMp3downloader(&convertor, logger)
 	youtubevideoprofiler := youtubevideoprofiler.NewVideoProfiler(logger)
 	controller := api.NewYoutubeController(&mp3downloader, youtubevideoprofiler, logger)
 

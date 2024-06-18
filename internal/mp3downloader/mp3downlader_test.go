@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 	"youtube_download/internal/convertor"
-	"youtube_download/internal/downloader"
 
 	"go.uber.org/zap"
 )
@@ -29,10 +28,9 @@ func TestMp3Downloader_Success(t *testing.T) {
 		panic(err)
 	}
 
-	downloader := downloader.NewDownloader(logger)
 	convertor := convertor.NewConverter()
 
-	mp3downloader := NewMp3downloader(&downloader, &convertor, logger)
+	mp3downloader := NewMp3downloader(&convertor, logger)
 	for _, test := range testTable {
 		_, mp3Filename, err := mp3downloader.DownloadMp3(ctx, test.URL)
 		if test.err != err {
@@ -50,5 +48,4 @@ func TestMp3Downloader_Success(t *testing.T) {
 			return
 		}
 	}
-
 }
