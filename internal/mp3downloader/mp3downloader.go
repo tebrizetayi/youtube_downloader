@@ -65,7 +65,7 @@ func (c *Client) DownloadMp3(ctx context.Context, url string) ([]byte, string, e
 	// Correctly separate the '-f' and its argument without single quotes around the format specifier
 	//cmd := exec.CommandContext(ctx, "youtube-dl", "-f", "best[ext=mp4]", "-o", fileName, url)
 	//cmd := exec.CommandContext(ctx, "yt-dlp", "-x", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best", "-o", fileName, url)
-	cmd := exec.CommandContext(ctx, "yt-dlp", "-x", "--cookies", cookiesFile, "--audio-format", "mp3", "-o", fileName, url)
+	cmd := exec.CommandContext(ctx, "yt-dlp", "-x", "--extractor-args", "youtube:no-video-proxy", "--cookies", cookiesFile, "--audio-format", "mp3", "-o", fileName, url)
 
 	//yt-dlp -x --audio-format mp3 -o "random.mp3"  https://www.youtube.com/watch?v=UD3t3nY9xJ8
 

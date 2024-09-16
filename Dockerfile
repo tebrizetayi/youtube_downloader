@@ -14,6 +14,8 @@ RUN python3 -m venv /opt/venv
 # Activate virtual environment and install yt-dlp
 RUN . /opt/venv/bin/activate && pip install yt-dlp
 
+#RUN python3 -m pip install -U https://github.com/pukkandan/yt-dlp-YTAgeGateBypass/archive/master.zip
+
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy the current directory contents into the container
