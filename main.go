@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"go.uber.org/zap"
 
 	"net/http"
@@ -67,7 +65,7 @@ func main() {
 	for {
 		select {
 		case <-ticker.C: // Wait for the next tick
-			fmt.Println("Performing scheduled file check and deletion...")
+			logger.Info("Performing scheduled file check and deletion...")
 			filepath.Walk(root, deleteOldFiles)
 		case err := <-serverErrors:
 			logger.Fatal("error starting server", zap.Error(err))
