@@ -13,6 +13,22 @@ import (
 	"go.uber.org/zap"
 )
 
+func fileExists(filePath string) bool {
+	// os.Stat returns the file info or an error if it doesn't exist
+	_, err := os.Stat(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			// File does not exist
+			return false
+		}
+		// Another error occurred, handle it
+		fmt.Println("Error checking file:", err)
+		return false
+	}
+	// File exists
+	return true
+}
+
 type Mp3downloader interface {
 	DownloadMp3(ctx context.Context, url string) ([]byte, string, error)
 }
@@ -29,6 +45,14 @@ func NewMp3downloader(c convertor.Converter, logger *zap.Logger) Client {
 	}
 }
 func (c *Client) DownloadMp3(ctx context.Context, url string) ([]byte, string, error) {
+	//cookiesPath := "~/cookies-youtube-com.txt"
+	cookiesFile := "/go/src/app/cookies-youtube-com.txt"
+
+	if fileExists(cookiesFile) {
+		fmt.Println("Cookies file exists!")
+	} else {
+		fmt.Println("Cookies file does not exist!")
+	}
 	fileName := fmt.Sprintf("%d", time.Now().UnixNano())
 
 	url, err := c.ExtractVideoID(url)
@@ -41,7 +65,7 @@ func (c *Client) DownloadMp3(ctx context.Context, url string) ([]byte, string, e
 	// Correctly separate the '-f' and its argument without single quotes around the format specifier
 	//cmd := exec.CommandContext(ctx, "youtube-dl", "-f", "best[ext=mp4]", "-o", fileName, url)
 	//cmd := exec.CommandContext(ctx, "yt-dlp", "-x", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best", "-o", fileName, url)
-	cmd := exec.CommandContext(ctx, "yt-dlp", "-x", "--audio-format", "mp3", "-o", fileName, url)
+	cmd := exec.CommandContext(ctx, "yt-dlp", "-x", "--cookies", cookiesFile, "--audio-format", "mp3", "-o", fileName, url)
 
 	//yt-dlp -x --audio-format mp3 -o "random.mp3"  https://www.youtube.com/watch?v=UD3t3nY9xJ8
 
