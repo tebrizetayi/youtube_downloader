@@ -11,7 +11,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "${PORT:-7070}:${PORT:-7070}"
+      - "80:${PORT:-7070}"
     environment:
       - PORT=${PORT:-7070}
     networks:
