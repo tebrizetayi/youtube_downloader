@@ -13,7 +13,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func fileExists(filePath string) bool {
+func (c *Client) fileExists(filePath string) bool {
 	// os.Stat returns the file info or an error if it doesn't exist
 	_, err := os.Stat(filePath)
 	if err != nil {
@@ -22,7 +22,7 @@ func fileExists(filePath string) bool {
 			return false
 		}
 		// Another error occurred, handle it
-		fmt.Println("Error checking file:", err)
+		c.Logger.Info("Error checking file:", zap.Error(err))
 		return false
 	}
 	// File exists
@@ -48,10 +48,10 @@ func (c *Client) DownloadMp3(ctx context.Context, url string) ([]byte, string, e
 	//cookiesPath := "~/cookies-youtube-com.txt"
 	cookiesFile := "/go/src/app/cookies-youtube-com.txt"
 
-	if fileExists(cookiesFile) {
-		fmt.Println("Cookies file exists!")
+	if c.fileExists(cookiesFile) {
+		c.Logger.Info("Cookies file exists!")
 	} else {
-		fmt.Println("Cookies file does not exist!")
+		c.Logger.Info("Cookies file does not exist!")
 	}
 	fileName := fmt.Sprintf("%d", time.Now().UnixNano())
 
