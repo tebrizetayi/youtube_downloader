@@ -44,62 +44,58 @@ func NewMp3downloader(c convertor.Converter, logger *zap.Logger) Client {
 		Logger:    logger,
 	}
 }
+
 func (c *Client) DownloadMp3(ctx context.Context, url string) ([]byte, string, error) {
-	//cookiesPath := "~/cookies-youtube-com.txt"
 	cookiesFile := "/go/src/app/cookies-youtube-com.txt"
 
+	// Check if the cookies file exists
 	if c.fileExists(cookiesFile) {
 		c.Logger.Info("Cookies file exists!")
 	} else {
 		c.Logger.Info("Cookies file does not exist!")
 	}
+
+	// Generate a unique filename based on the current time
 	fileName := fmt.Sprintf("%d", time.Now().UnixNano())
 
+	// Extract the video ID from the URL
 	url, err := c.ExtractVideoID(url)
 	if err != nil {
 		return nil, "", err
 	}
 
-	//yt-dlp -o "myvideo.mp4" -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" https://www.youtube.com/watch?v=dQw4w9WgXcQ
-
-	// Correctly separate the '-f' and its argument without single quotes around the format specifier
-	//cmd := exec.CommandContext(ctx, "youtube-dl", "-f", "best[ext=mp4]", "-o", fileName, url)
-	//cmd := exec.CommandContext(ctx, "yt-dlp", "-x", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best", "-o", fileName, url)
-	cmd := exec.CommandContext(ctx, "yt-dlp", "-vU", "-v", "-x", "--audio-format", "mp3", "-o", fileName, url)
-
-	//yt-dlp -x --audio-format mp3 -o "random.mp3"  https://www.youtube.com/watch?v=UD3t3nY9xJ8
+	// Prepare the yt-dlp command to download the audio as mp3
+	cmd := exec.CommandContext(ctx, "yt-dlp", "-vU", "-v", "-x", "--audio-format", "mp3", "-o", fileName+".mp3", url)
 
 	c.Logger.Info("executing command", zap.Any("cmd", cmd.Args))
 
-	// Start the command
-	err = cmd.Start()
+	// Capture the output (stdout and stderr) from the command execution
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, "", fmt.Errorf("failed to start command: %w", err)
+		// Log the command output (stdout/stderr) in case of an error
+		c.Logger.Error("failed to execute command", zap.Error(err), zap.String("output", string(output)))
+		return nil, "", fmt.Errorf("failed to execute command: %w, output: %s", err, string(output))
 	}
 
-	// Wait for command to complete or context cancellation
-	select {
-	case <-ctx.Done():
-		// If context is done, attempt to kill the process
-		if killErr := cmd.Process.Kill(); killErr != nil {
-			return nil, "", fmt.Errorf("failed to kill process: %w", killErr)
-		}
-		return nil, "", ctx.Err()
-
-	default:
-		// Wait for the command to finish executing
-		err = cmd.Wait()
-		if err != nil {
-			return nil, "", fmt.Errorf("error waiting for command to finish: %w", err)
-		}
+	// Check if the output file was created successfully
+	outputFile := fileName + ".mp3"
+	if !c.fileExists(outputFile) {
+		return nil, "", fmt.Errorf("output file %s was not created", outputFile)
 	}
 
-	mp3Bytes, err := os.ReadFile(fileName + ".mp3")
+	// Read the output MP3 file
+	mp3Bytes, err := os.ReadFile(outputFile)
 	if err != nil {
 		return nil, "", err
 	}
 
-	return mp3Bytes, fileName + ".mp3", nil
+	// Clean up the file after reading it
+	err = os.Remove(outputFile)
+	if err != nil {
+		c.Logger.Warn("failed to remove temporary file", zap.String("file", outputFile), zap.Error(err))
+	}
+
+	return mp3Bytes, outputFile, nil
 }
 
 func (c *Client) ExtractVideoID(inputURL string) (string, error) {
