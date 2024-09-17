@@ -41,7 +41,8 @@ func main() {
 	// Services
 	convertor := convertor.NewConverter()
 	mp3downloader := mp3downloader.NewMp3downloader(&convertor, logger)
-	youtubevideoprofiler := youtubevideoprofiler.NewVideoProfiler(logger)
+	//youtubevideoprofiler := youtubevideoprofiler.NewVideoProfiler(logger)
+	youtubevideoprofiler := youtubevideoprofiler.NewVideoProfilerMock(logger)
 	controller := api.NewYoutubeController(&mp3downloader, youtubevideoprofiler, logger)
 
 	// Start the HTTP service listening for requests.

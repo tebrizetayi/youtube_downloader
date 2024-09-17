@@ -20,13 +20,13 @@ import (
 
 type YoutubeConvertorController struct {
 	mp3downloader.Mp3downloader
-	YVideoprofiler  youtubevideoprofiler.ProfilerClient
+	YVideoprofiler  youtubevideoprofiler.VideoProfiler
 	downloadManager *DownloadManager
 	Logger          *zap.Logger
 }
 
 func NewYoutubeController(mp3Downloader mp3downloader.Mp3downloader,
-	youtubevideoprofiler youtubevideoprofiler.ProfilerClient,
+	youtubevideoprofiler youtubevideoprofiler.VideoProfiler,
 	logger *zap.Logger,
 ) YoutubeConvertorController {
 	return YoutubeConvertorController{
