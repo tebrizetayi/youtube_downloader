@@ -54,8 +54,8 @@ func (c *ProfilerClient) CheckVideoDuration(ctx context.Context, videoID string,
 func (c *ProfilerClient) IsVideoAvailable(ctx context.Context, videoID string) (bool, error) {
 	_, err := c.GetVideoInfo(ctx, videoID)
 	if err != nil {
-		c.logger.Error("error ", zap.Error(err))
-		return false, ErrVideoNotFound
+		//c.logger.Error("error ", zap.Error(err))
+		//return false, ErrVideoNotFound
 	}
 	return true, nil
 }
