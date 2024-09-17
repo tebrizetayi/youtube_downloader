@@ -194,8 +194,11 @@ type VideoInfo struct {
 }
 
 func (c *YoutubeConvertorController) Info(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
+	/*ctx := r.Context()
 	url := r.URL.Query().Get("url")
+
+	_ = ctx
+	_ = url
 
 	video, err := c.YVideoprofiler.GetVideoInfo(ctx, url)
 	if err != nil {
@@ -208,7 +211,13 @@ func (c *YoutubeConvertorController) Info(w http.ResponseWriter, r *http.Request
 			time.Duration(video.Duration.Seconds())%60),
 		Title: video.Title,
 	}
-	jsonData, _ := json.Marshal(videoInfo)
+	*/
+	jsonData, _ := json.Marshal(VideoInfo{
+		Duration: fmt.Sprintf("%d:%d minutes",
+			time.Duration(1000)/60,
+			time.Duration(1000)%60),
+		Title: "Test",
+	})
 
 	w.Write(jsonData)
 }

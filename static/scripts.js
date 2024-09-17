@@ -38,28 +38,12 @@ form.addEventListener('submit', async (event) => {
 // Fetch video details and update UI
 async function fetchVideoDetails(url) {
   spinner.style.display = 'flex';
+  const response = await fetch('/info?url=' + encodeURIComponent(url));
+  if (!response.ok) throw new Error('Failed to fetch video details');
 
-  try {
-    const response = await fetch('/info?url=' + encodeURIComponent(url));
-
-    if (!response.ok) {
-      // Log the error instead of throwing it
-      console.log('Failed to fetch video details. Please check the URL and try again.');
-      spinner.style.display = 'none';
-      return null; // Return null to indicate failure
-    }
-
-    const videoDetails = await response.json();
-    console.log('Video details fetched successfully:', videoDetails);
-    // Further processing of video details if needed
-  } catch (error) {
-    // Handle any unexpected errors (e.g., network errors) and log them
-    console.log('An unexpected error occurred:', error.message);
-  } finally {
-    spinner.style.display = 'none'; // Always hide spinner after request
-  }
+  const videoDetails = await response.json();
+  displayVideoDetails(videoDetails.title, videoDetails.duration);
 }
-
 
 // Initiate download and return token
 async function initiateDownload(url) {
